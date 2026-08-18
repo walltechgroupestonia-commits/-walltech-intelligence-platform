@@ -1,0 +1,60 @@
+{
+  "dealId": "QUECTEL-EC21-2026-001",
+  "dealName": "Quectel EC21 Supply & Resale",
+  "source": "Walltech origination",
+  "mailbox": "info@walltechgroup.eu",
+  "status": "WAITING_ON_SUPPLIER",
+  "priority": "HIGH",
+  "supplier": "Quectel Wireless Solutions",
+  "primaryContact": {
+    "name": "Sergey Shevelev",
+    "role": "Regional Sales Manager",
+    "email": "sergey.shevelev@quectel.com"
+  },
+  "otherContacts": [
+    "grace.tan@quectel.com",
+    "cathy.xu@quectel.com",
+    "lazar.sertic@quectel.com",
+    "alberto.sanchez@quectel.com",
+    "nordic-sales@quectel.com"
+  ],
+  "requestedSku": "EC21EUGA-512-SGNS",
+  "urgentQuantityMin": 20000,
+  "urgentQuantityMax": 30000,
+  "estimatedAnnualUnits": 200000,
+  "userEstimatedAnnualVolume": 230000,
+  "customerRequirement": "Existing production requires EC21EUGA-512-SGNS specifically.",
+  "futureValidationCandidate": "EC21EUGC-512-SGNS",
+  "supplierConstraint": "Critical memory shortage / allocation on EC21EUGA-512-SGNS and other Qualcomm-based SKUs.",
+  "supplierAlternatives": [
+    {
+      "sku": "EC21EUGC-512-SGNS",
+      "type": "Qualcomm-based"
+    },
+    {
+      "sku": "EC21EUXGR-128-SGNS",
+      "type": "Qualcomm-based"
+    },
+    {
+      "sku": "EC200AEUHA-N06-SNASA",
+      "type": "ASR-based"
+    }
+  ],
+  "missingCommercialData": [
+    "available quantity",
+    "purchase price",
+    "delivery date",
+    "shipping origin",
+    "delivery terms to Tallinn"
+  ],
+  "lastSupplierResponseDate": "2026-08-07",
+  "walltechFollowUps": [
+    "2026-08-14",
+    "2026-08-18"
+  ],
+  "currentBlocker": "Supplier has not provided availability, price or delivery feedback after Walltech follow-up.",
+  "nextAction": "Escalate supplier response and obtain written commercial availability for requested SKU before evaluating alternatives.",
+  "revenueStatus": "NOT_PRICED",
+  "marginStatus": "UNKNOWN",
+  "timeToRevenueStatus": "BLOCKED_BEFORE_QUOTATION"
+}

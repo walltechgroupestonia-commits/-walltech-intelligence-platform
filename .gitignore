@@ -1,0 +1,25 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Runtime secrets
+secrets/
+*.pem
+*.key
+*.crt
+
+# Node
+node_modules/
+dist/
+build/
+coverage/
+
+# Logs
+*.log
+logs/
+
+# OS / Editor
+.DS_Store
+.vscode/
+.idea/
