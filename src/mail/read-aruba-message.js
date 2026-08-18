@@ -105,9 +105,33 @@ async function fetchMessageByUid({
     await client.connect();
     connected = true;
 
-    await client.mailboxOpen(mailboxPath, {
+    const mailbox = await client.mailboxOpen(mailboxPath, {
       readOnly: true,
     });
+
+    if (mailbox.readOnly !== true) {
+      fail(
+        `MAILBOX NOT OPENED READ-ONLY: ${mailboxPath}`,
+        6
+      );
+    }
+
+    if (mailbox.uidValidity === undefined ||
+        mailbox.uidValidity === null) {
+      fail(
+        `UIDVALIDITY NOT AVAILABLE: ${mailboxPath}`,
+        7
+      );
+    }
+
+    const uidValidity = String(mailbox.uidValidity);
+
+    if (!/^[0-9]+$/.test(uidValidity)) {
+      fail(
+        `INVALID UIDVALIDITY: ${uidValidity}`,
+        7
+      );
+    }
 
     /*
      * First fetch:
@@ -232,7 +256,9 @@ async function fetchMessageByUid({
       mailboxUser: config.user,
       mailboxPath,
       accessMode: "READ_ONLY",
+      mailboxReadOnly: true,
       selectorType: "UID",
+      uidValidity,
       uid: message.uid ?? uid,
       seq: message.seq ?? null,
 
@@ -297,6 +323,7 @@ async function main() {
   console.error("ARUBA MESSAGE CONTENT ACQUISITION: PASS");
   console.error(`ACCOUNT: ${result.mailboxUser}`);
   console.error(`MAILBOX: ${result.mailboxPath}`);
+  console.error(`UIDVALIDITY: ${result.uidValidity}`);
   console.error(`UID: ${result.uid}`);
   console.error(`MODE: ${result.accessMode}`);
   console.error(`SOURCE BYTES: ${result.sourceBytes}`);

@@ -114,6 +114,24 @@ Aruba Mail Intelligence Automation
 - INBOX UID 17 normalization verified.
 - INBOX.Sent UID 10 normalization verified.
 - Foundation and read-only mailbox regression gates remain green.
+- AZIONE 54 completed.
+- Persistent MailEvidence v1 contract implemented.
+- MailEvidence JSON Schema Draft 2020-12 implemented.
+- Generic MailEvidence builder implemented.
+- Generic MailEvidence validator implemented.
+- IMAP UIDVALIDITY added to exact-message acquisition.
+- Persistent IMAP identity is mailbox + UIDVALIDITY + UID.
+- INBOX UIDVALIDITY 1784554448 / UID 17 evidence verified.
+- INBOX.Sent UIDVALIDITY 1784554450 / UID 10 evidence verified.
+- Raw RFC822 SHA-256 continuity into MailEvidence verified.
+- Normalized text and HTML SHA-256 continuity verified.
+- Attachment metadata and SHA-256 continuity verified.
+- Body content is not stored inside MailEvidence.
+- Attachment binary content is not stored inside MailEvidence.
+- Deterministic MailEvidence ID verified.
+- Invalid MailEvidence schema input is rejected.
+- Acquisition/normalization cross-link mismatch is rejected.
+- Foundation regression remains green.
 
 ### EVIDENCE
 
@@ -179,6 +197,30 @@ Normalization contract:
     ATTACHMENT METADATA: EXTRACTED
     ATTACHMENT BINARY IN JSON: NOT STORED
 
+MailEvidence Contract v1:
+
+    INBOX / UIDVALIDITY 1784554448 / UID 17
+    MAIL EVIDENCE: VALID
+    EVIDENCE ID:
+    ME-fea3dd270032446c25c6d9b323760dc694c0224070fdf688c913ba0b4e6ef155
+
+    INBOX.Sent / UIDVALIDITY 1784554450 / UID 10
+    MAIL EVIDENCE: VALID
+    EVIDENCE ID:
+    ME-0092fe49560909081981c82e6db8ac3390a8a991f211c86bf9d0506907838091
+
+MailEvidence integrity:
+
+    MAILBOX + UIDVALIDITY + UID: PASS
+    RAW SHA-256 LINK: PRESERVED
+    NORMALIZED HASH LINK: PRESERVED
+    ATTACHMENT EVIDENCE: PRESERVED
+    BODY BINARY IN EVIDENCE: NOT STORED
+    ATTACHMENT BINARY IN EVIDENCE: NOT STORED
+    EVIDENCE ID: DETERMINISTIC
+    INVALID CONTRACT: REJECTED
+    CROSS-LINK MISMATCH: REJECTED
+
 ### SECURITY NOTE
 
 A mailbox message from comunicazioni@staff.aruba.it with subject
@@ -218,9 +260,9 @@ None for Communication Intelligence Foundation v1.
 
 ## NEXT ACTION
 
-AZIONE 54 — create a persistent normalized MailEvidence object contract linking mailbox, UID, Message-ID, raw-message SHA-256, normalized content hashes and attachment evidence metadata.
+AZIONE 56 — create the end-to-end read-only MailEvidence orchestrator for the INFO mailbox, joining exact UID acquisition, RFC822 normalization, MailEvidence build and validation behind one controlled command.
 
-Do not open communication-cycle detection, unanswered/follow-up detection, CRM routing or the marketing mailbox until the mail evidence layer is complete.
+Do not open communication-cycle detection, unanswered/follow-up detection, CRM routing or the marketing mailbox until acquisition orchestration is complete.
 
 ## OPERATING RULE
 

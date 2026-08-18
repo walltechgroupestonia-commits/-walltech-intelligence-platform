@@ -1,0 +1,357 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/mail-evidence.schema.json",
+  "title": "Walltech MailEvidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidenceVersion",
+    "evidenceType",
+    "evidenceId",
+    "source",
+    "identity",
+    "participants",
+    "rawEvidence",
+    "normalizedContent",
+    "attachmentCount",
+    "attachments",
+    "acquisitionEvidence",
+    "normalizationEvidence",
+    "createdAt"
+  ],
+  "properties": {
+    "evidenceVersion": {
+      "const": "1.0"
+    },
+    "evidenceType": {
+      "const": "MAIL_EVIDENCE"
+    },
+    "evidenceId": {
+      "type": "string",
+      "pattern": "^ME-[a-f0-9]{64}$"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceType",
+        "provider",
+        "accountKey",
+        "mailboxUser",
+        "mailboxPath",
+        "accessMode",
+        "selectorType",
+        "uidValidity",
+        "uid"
+      ],
+      "properties": {
+        "sourceType": {
+          "const": "IMAP"
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accountKey": {
+          "type": "string",
+          "pattern": "^[A-Z0-9_-]+$"
+        },
+        "mailboxUser": {
+          "type": "string",
+          "format": "email"
+        },
+        "mailboxPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accessMode": {
+          "const": "READ_ONLY"
+        },
+        "selectorType": {
+          "const": "UID"
+        },
+        "uidValidity": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "uid": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "messageId",
+        "date",
+        "internalDate",
+        "subject"
+      ],
+      "properties": {
+        "messageId": {
+          "type": ["string", "null"]
+        },
+        "date": {
+          "type": ["string", "null"]
+        },
+        "internalDate": {
+          "type": ["string", "null"]
+        },
+        "subject": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "participants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from",
+        "to",
+        "cc",
+        "replyTo"
+      ],
+      "properties": {
+        "from": {
+          "$ref": "#/$defs/addressList"
+        },
+        "to": {
+          "$ref": "#/$defs/addressList"
+        },
+        "cc": {
+          "$ref": "#/$defs/addressList"
+        },
+        "replyTo": {
+          "$ref": "#/$defs/addressList"
+        }
+      }
+    },
+    "rawEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceBytes",
+        "sourceSha256"
+      ],
+      "properties": {
+        "sourceBytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sourceSha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "normalizedContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "textPresent",
+        "htmlPresent",
+        "textCharacters",
+        "htmlCharacters",
+        "textBytes",
+        "htmlBytes",
+        "textSha256",
+        "htmlSha256"
+      ],
+      "properties": {
+        "textPresent": {
+          "type": "boolean"
+        },
+        "htmlPresent": {
+          "type": "boolean"
+        },
+        "textCharacters": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "htmlCharacters": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "textBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "htmlBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "textSha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "htmlSha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "attachmentCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/attachment"
+      }
+    },
+    "acquisitionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "acquisitionVersion",
+        "flagsBefore",
+        "flagsAfter",
+        "flagsUnchanged",
+        "acquiredAt"
+      ],
+      "properties": {
+        "acquisitionVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "flagsBefore": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "flagsAfter": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "flagsUnchanged": {
+          "const": true
+        },
+        "acquiredAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "normalizationEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "normalizationVersion",
+        "normalizationType",
+        "normalizedAt"
+      ],
+      "properties": {
+        "normalizationVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "normalizationType": {
+          "const": "RFC822_NORMALIZED_CONTENT"
+        },
+        "normalizedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "address": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "address"
+      ],
+      "properties": {
+        "name": {
+          "type": ["string", "null"]
+        },
+        "address": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "addressList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/address"
+      }
+    },
+    "attachment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "filename",
+        "mimeType",
+        "disposition",
+        "related",
+        "contentId",
+        "description",
+        "sizeBytes",
+        "sha256",
+        "contentStored"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "filename": {
+          "type": ["string", "null"]
+        },
+        "mimeType": {
+          "type": ["string", "null"]
+        },
+        "disposition": {
+          "type": ["string", "null"]
+        },
+        "related": {
+          "type": "boolean"
+        },
+        "contentId": {
+          "type": ["string", "null"]
+        },
+        "description": {
+          "type": ["string", "null"]
+        },
+        "sizeBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "contentStored": {
+          "const": false
+        }
+      }
+    }
+  }
+}
