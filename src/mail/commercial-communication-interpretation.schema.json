@@ -1,0 +1,387 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/commercial-communication-interpretation.schema.json",
+  "title": "Walltech Commercial Communication Interpretation v1",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "interpretationVersion",
+    "interpretationType",
+    "commercialCommunicationInterpretationId",
+    "interpretationPolicy",
+    "source",
+    "message",
+    "contentScope",
+    "signalCount",
+    "signals",
+    "productReferenceCount",
+    "productReferences",
+    "actionDirectiveCount",
+    "actionDirectives",
+    "nextActorDetermination",
+    "dealImpact",
+    "commercialStateMutation",
+    "generatedAt"
+  ],
+
+  "properties": {
+    "interpretationVersion": {
+      "const": "1.0"
+    },
+
+    "interpretationType": {
+      "const": "COMMERCIAL_COMMUNICATION_INTERPRETATION"
+    },
+
+    "commercialCommunicationInterpretationId": {
+      "type": "string",
+      "pattern": "^CCI-[a-f0-9]{64}$"
+    },
+
+    "interpretationPolicy": {
+      "const": "EXPLICIT_AUTHORED_TEXT_ONLY_V1"
+    },
+
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mailEvidenceId",
+        "responseExpectationEvidenceId",
+        "accountKey",
+        "mailboxUser",
+        "mailboxPath",
+        "uidValidity",
+        "uid",
+        "rawSourceSha256",
+        "textSha256",
+        "authoredTextSha256"
+      ],
+      "properties": {
+        "mailEvidenceId": {
+          "type": "string",
+          "pattern": "^ME-[a-f0-9]{64}$"
+        },
+
+        "responseExpectationEvidenceId": {
+          "type": "string",
+          "pattern": "^REE-[a-f0-9]{64}$"
+        },
+
+        "accountKey": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "mailboxUser": {
+          "type": "string",
+          "format": "email"
+        },
+
+        "mailboxPath": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "uidValidity": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+
+        "uid": {
+          "type": "integer",
+          "minimum": 1
+        },
+
+        "rawSourceSha256": {
+          "$ref": "#/$defs/nullableSha256"
+        },
+
+        "textSha256": {
+          "$ref": "#/$defs/nullableSha256"
+        },
+
+        "authoredTextSha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "messageId",
+        "subject",
+        "direction"
+      ],
+      "properties": {
+        "messageId": {
+          "type": ["string", "null"]
+        },
+
+        "subject": {
+          "type": ["string", "null"]
+        },
+
+        "direction": {
+          "$ref": "#/$defs/direction"
+        }
+      }
+    },
+
+    "contentScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scopeType",
+        "authoredTextCharacters",
+        "quotedHistoryDetected"
+      ],
+      "properties": {
+        "scopeType": {
+          "const": "AUTHORED_TEXT_ONLY"
+        },
+
+        "authoredTextCharacters": {
+          "type": "integer",
+          "minimum": 0
+        },
+
+        "quotedHistoryDetected": {
+          "type": "boolean"
+        }
+      }
+    },
+
+    "signalCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "signals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/commercialSignal"
+      }
+    },
+
+    "productReferenceCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "productReferences": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/productReference"
+      }
+    },
+
+    "actionDirectiveCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "actionDirectives": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/actionDirective"
+      }
+    },
+
+    "nextActorDetermination": {
+      "type": "string",
+      "enum": [
+        "WALLTECH",
+        "COUNTERPARTY",
+        "CUSTOMER",
+        "UNKNOWN",
+        "NONE"
+      ]
+    },
+
+    "dealImpact": {
+      "type": "string",
+      "enum": [
+        "NO_EXPLICIT_IMPACT",
+        "BLOCKER_IDENTIFIED",
+        "ALTERNATIVE_IDENTIFIED",
+        "ACTION_REQUIRED",
+        "MULTIPLE"
+      ]
+    },
+
+    "commercialStateMutation": {
+      "const": "NONE"
+    },
+
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+
+    "nullableSha256": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+
+    "direction": {
+      "type": "string",
+      "enum": [
+        "INBOUND",
+        "OUTBOUND",
+        "SELF",
+        "AMBIGUOUS"
+      ]
+    },
+
+    "commercialSignal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signalType",
+        "subject",
+        "semanticValue",
+        "certainty",
+        "evidenceExcerpt",
+        "evidenceExcerptSha256",
+        "basis"
+      ],
+      "properties": {
+        "signalType": {
+          "type": "string",
+          "enum": [
+            "SUPPLIER_CONSTRAINT",
+            "AVAILABILITY_STATUS",
+            "LEAD_TIME_STATUS",
+            "PRODUCT_ALTERNATIVE",
+            "COMMERCIAL_RECOMMENDATION",
+            "ACTION_DIRECTIVE",
+            "OTHER_EXPLICIT_COMMERCIAL_FACT"
+          ]
+        },
+
+        "subject": {
+          "type": ["string", "null"]
+        },
+
+        "semanticValue": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "certainty": {
+          "type": "string",
+          "enum": [
+            "EXPLICIT",
+            "QUALIFIED"
+          ]
+        },
+
+        "evidenceExcerpt": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "evidenceExcerptSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+
+        "basis": {
+          "const": "AUTHORED_TEXT_EXPLICIT_STATEMENT"
+        }
+      }
+    },
+
+    "productReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "productRef",
+        "role",
+        "evidenceExcerpt",
+        "evidenceExcerptSha256"
+      ],
+      "properties": {
+        "productRef": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "role": {
+          "type": "string",
+          "enum": [
+            "REQUESTED",
+            "ALTERNATIVE",
+            "OTHER"
+          ]
+        },
+
+        "evidenceExcerpt": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "evidenceExcerptSha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+
+    "actionDirective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "actor",
+        "action",
+        "target",
+        "evidenceExcerpt",
+        "evidenceExcerptSha256"
+      ],
+      "properties": {
+        "actor": {
+          "type": "string",
+          "enum": [
+            "WALLTECH",
+            "COUNTERPARTY",
+            "CUSTOMER",
+            "UNKNOWN"
+          ]
+        },
+
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "target": {
+          "type": ["string", "null"]
+        },
+
+        "evidenceExcerpt": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "evidenceExcerptSha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    }
+  }
+}
