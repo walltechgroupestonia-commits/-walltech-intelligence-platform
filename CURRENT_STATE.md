@@ -146,6 +146,23 @@ Aruba Mail Intelligence Automation
 - Invalid UID input is rejected.
 - Foundation and component regression gates remain green.
 - INFO acquisition, normalization and MailEvidence orchestration layer is complete.
+- AZIONE 58 completed.
+- Communication Cycle Detection v1 contract implemented.
+- Generic Communication Cycle candidate detector implemented.
+- Generic detection validator implemented.
+- Verified MailEvidence records are accepted as detector input.
+- INBOUND message direction detection verified.
+- OUTBOUND message direction detection verified.
+- SELF and AMBIGUOUS directions are explicitly represented by the contract.
+- RE/FW/FWD subject prefix normalization implemented.
+- Quectel inbound and outbound messages resolve to one normalized subject key.
+- Candidate relationship IDs are deterministic and independent of input order.
+- Bidirectional exchange evidence can be observed without declaring the communication cycle closed.
+- Quectel candidate relationship detection verified.
+- Detection v1 does not infer commercial status, priority, blocker, next action, revenue or Time To Revenue.
+- Invalid detection objects are rejected.
+- Mixed MailEvidence sources are rejected.
+- Foundation regression remains green.
 - Foundation regression remains green.
 
 ### EVIDENCE
@@ -300,9 +317,9 @@ None for Communication Intelligence Foundation v1.
 
 ## NEXT ACTION
 
-AZIONE 58 — Communication Cycle Detection v1: derive candidate communication relationships and message direction from verified INFO MailEvidence records without changing the underlying mailbox or CommunicationCycle Foundation contract.
+AZIONE 60 — Communication Sequence v1: order verified messages inside each candidate relationship and identify the latest observed direction/event using evidence timestamps only.
 
-This begins a new technical layer. Do not mix unanswered/follow-up logic, CRM routing or the marketing mailbox into the initial Communication Cycle Detection action.
+Do not infer unanswered state, follow-up obligation, commercial status or next action in AZIONE 60. Those require a separate response-state layer after sequence ordering is proven.
 
 ## OPERATING RULE
 
