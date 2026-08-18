@@ -76,6 +76,62 @@ Foundation v1 implementation commit:
 
     d49594346ac9ed1dae970f906000c8b0be386c5b
 
+## ACTIVE CYCLE
+
+Aruba Mail Intelligence Automation
+
+### DONE
+
+- AZIONE 48 completed.
+- Generic Aruba IMAP acquisition client created.
+- ImapFlow installed.
+- info@walltechgroup.eu INBOX acquisition verified.
+- info@walltechgroup.eu INBOX.Sent acquisition verified.
+- Mailboxes are opened in READ_ONLY mode.
+- Acquisition output is structured JSON.
+- Current metadata acquisition includes seq, UID, Message-ID, dates, subject, from, to, cc, reply-to, flags and message size.
+- .env remains ignored by Git.
+- Foundation v1 regression validation remains green.
+
+### EVIDENCE
+
+INFO / INBOX:
+
+    ARUBA MAIL ACQUISITION: PASS
+    MODE: READ_ONLY
+    TOTAL MESSAGES: 20
+    FETCHED: 5
+
+INFO / INBOX.Sent:
+
+    ARUBA MAIL ACQUISITION: PASS
+    MODE: READ_ONLY
+    TOTAL MESSAGES: 10
+    FETCHED: 5
+
+Foundation regression:
+
+    COMMUNICATION CYCLE: VALID
+    DEAL: QUECTEL-EC21-2026-001
+
+### SECURITY NOTE
+
+A mailbox message from comunicazioni@staff.aruba.it with subject
+"Abbiamo rilevato accessi sospetti alla tua casella" was observed during acquisition.
+
+This is recorded as evidence only.
+It is not currently classified as a blocker and no separate security cycle has been opened.
+
+### OPEN
+
+- Message body/content acquisition.
+- Persistent normalized mail evidence.
+- Automated acquisition orchestration.
+
+### BLOCKED
+
+None for the current Aruba Mail Intelligence acquisition cycle.
+
 ## OPEN
 
 The following are intentionally outside Foundation v1 and have NOT been opened inside this milestone:
@@ -99,9 +155,9 @@ None for Communication Intelligence Foundation v1.
 
 ## NEXT ACTION
 
-AZIONE 48 — start the separate Aruba Mail Intelligence automation cycle.
+AZIONE 50 — add read-only message content acquisition by UID for the INFO mailbox.
 
-Foundation v1 must remain the stable technical contract and must not be reopened unless a verified defect or required schema evolution is identified.
+Do not open communication-cycle detection, follow-up detection, CRM routing or the marketing mailbox before this acquisition layer is complete.
 
 ## OPERATING RULE
 
