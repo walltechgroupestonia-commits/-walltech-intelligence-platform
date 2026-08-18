@@ -163,6 +163,23 @@ Aruba Mail Intelligence Automation
 - Invalid detection objects are rejected.
 - Mixed MailEvidence sources are rejected.
 - Foundation regression remains green.
+- AZIONE 60 completed.
+- Communication Sequence v1 contract implemented.
+- Generic sequence builder implemented.
+- Generic sequence validator implemented.
+- Candidate relationship events are ordered using verified evidence timestamps only.
+- Sequence event ordering is independent of detector input order.
+- Undated evidence is preserved explicitly and cannot silently determine latest timestamped event.
+- Timestamp coverage and ordering completeness are explicitly measured.
+- Quectel candidate relationship sequence verified with 100% timestamp coverage.
+- Quectel first observed event is INBOUND at 2026-08-07T11:27:28.000Z.
+- Quectel second observed event is OUTBOUND at 2026-08-18T06:28:01.000Z.
+- Quectel latest observed direction is OUTBOUND.
+- Quectel latest observed event is linked to exact MailEvidence.
+- Communication Sequence v1 does not infer unanswered state, response obligation, follow-up, waiting state or commercial status.
+- Invalid sequence objects are rejected.
+- Broken evidence links are rejected.
+- Foundation and Communication Cycle Detection regression gates remain green.
 - Foundation regression remains green.
 
 ### EVIDENCE
@@ -317,9 +334,9 @@ None for Communication Intelligence Foundation v1.
 
 ## NEXT ACTION
 
-AZIONE 60 — Communication Sequence v1: order verified messages inside each candidate relationship and identify the latest observed direction/event using evidence timestamps only.
+AZIONE 62 — Response-State Evidence v1: derive a conservative response-state candidate from the verified ordered sequence while keeping observed direction separate from any assertion that a reply is actually required.
 
-Do not infer unanswered state, follow-up obligation, commercial status or next action in AZIONE 60. Those require a separate response-state layer after sequence ordering is proven.
+Do not infer commercial status, CRM routing or automatic follow-up actions in AZIONE 62. Response obligation must remain evidence-based and distinct from merely observing that the latest message is OUTBOUND.
 
 ## OPERATING RULE
 

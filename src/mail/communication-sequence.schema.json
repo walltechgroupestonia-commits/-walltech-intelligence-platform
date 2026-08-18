@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/communication-sequence.schema.json",
+  "title": "Walltech Communication Sequence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sequenceVersion",
+    "sequenceType",
+    "source",
+    "candidateRelationshipCount",
+    "sequences",
+    "generatedAt"
+  ],
+  "properties": {
+    "sequenceVersion": {
+      "const": "1.0"
+    },
+    "sequenceType": {
+      "const": "COMMUNICATION_SEQUENCES"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accountKey",
+        "mailboxUser",
+        "provider",
+        "detectionType",
+        "detectionMessageCount"
+      ],
+      "properties": {
+        "accountKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mailboxUser": {
+          "type": "string",
+          "format": "email"
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detectionType": {
+          "const": "COMMUNICATION_CYCLE_CANDIDATES"
+        },
+        "detectionMessageCount": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "candidateRelationshipCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "sequences": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/relationshipSequence"
+      }
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "evidenceId": {
+      "type": "string",
+      "pattern": "^ME-[a-f0-9]{64}$"
+    },
+    "relationshipId": {
+      "type": "string",
+      "pattern": "^CCR-[a-f0-9]{64}$"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "INBOUND",
+        "OUTBOUND",
+        "SELF",
+        "AMBIGUOUS"
+      ]
+    },
+    "sequenceEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequenceIndex",
+        "evidenceId",
+        "observedAt",
+        "direction",
+        "mailboxPath",
+        "uidValidity",
+        "uid",
+        "messageId",
+        "subject"
+      ],
+      "properties": {
+        "sequenceIndex": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "evidenceId": {
+          "$ref": "#/$defs/evidenceId"
+        },
+        "observedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "direction": {
+          "$ref": "#/$defs/direction"
+        },
+        "mailboxPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uidValidity": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "uid": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "messageId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "relationshipSequence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidateRelationshipId",
+        "subjectKey",
+        "orderingBasis",
+        "messageCount",
+        "timestampedMessageCount",
+        "undatedMessageCount",
+        "timestampCoverage",
+        "orderingComplete",
+        "events",
+        "latestObservedEvent",
+        "latestObservedDirection",
+        "latestObservedAt",
+        "latestObservedEvidenceId"
+      ],
+      "properties": {
+        "candidateRelationshipId": {
+          "$ref": "#/$defs/relationshipId"
+        },
+        "subjectKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "orderingBasis": {
+          "const": "EVIDENCE_TIMESTAMP"
+        },
+        "messageCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "timestampedMessageCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "undatedMessageCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "timestampCoverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "orderingComplete": {
+          "type": "boolean"
+        },
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/sequenceEvent"
+          }
+        },
+        "latestObservedEvent": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sequenceEvent"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "latestObservedDirection": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/direction"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "latestObservedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "latestObservedEvidenceId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/evidenceId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
