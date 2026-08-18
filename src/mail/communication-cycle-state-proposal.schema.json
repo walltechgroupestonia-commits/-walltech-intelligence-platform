@@ -1,0 +1,347 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/communication-cycle-state-proposal.schema.json",
+  "title": "Walltech Communication Cycle State Proposal v1",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "proposalVersion",
+    "proposalType",
+    "communicationCycleStateProposalId",
+    "proposalPolicy",
+    "source",
+    "currentCycleSnapshot",
+    "proposedChanges",
+    "evidenceBasis",
+    "decisionGate",
+    "automaticApplication",
+    "cycleMutationPerformed",
+    "generatedAt"
+  ],
+
+  "properties": {
+    "proposalVersion": {
+      "const": "1.0"
+    },
+
+    "proposalType": {
+      "const": "COMMUNICATION_CYCLE_STATE_PROPOSAL"
+    },
+
+    "communicationCycleStateProposalId": {
+      "type": "string",
+      "pattern": "^CCSP-[a-f0-9]{64}$"
+    },
+
+    "proposalPolicy": {
+      "const": "EVIDENCE_BOUND_NON_MUTATING_V1"
+    },
+
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dealId",
+        "commercialCommunicationInterpretationId",
+        "mailEvidenceId",
+        "responseExpectationEvidenceId"
+      ],
+      "properties": {
+        "dealId": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "commercialCommunicationInterpretationId": {
+          "type": "string",
+          "pattern": "^CCI-[a-f0-9]{64}$"
+        },
+
+        "mailEvidenceId": {
+          "type": "string",
+          "pattern": "^ME-[a-f0-9]{64}$"
+        },
+
+        "responseExpectationEvidenceId": {
+          "type": "string",
+          "pattern": "^REE-[a-f0-9]{64}$"
+        }
+      }
+    },
+
+    "currentCycleSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "currentBlocker",
+        "nextAction"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/cycleStatus"
+        },
+
+        "currentBlocker": {
+          "type": "string"
+        },
+
+        "nextAction": {
+          "type": "string"
+        }
+      }
+    },
+
+    "proposedChanges": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "currentBlocker",
+        "nextAction",
+        "missingCommercialDataAdditions",
+        "missingCommercialDataRemovals"
+      ],
+      "properties": {
+        "status": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "from",
+            "to",
+            "changeProposed"
+          ],
+          "properties": {
+            "from": {
+              "$ref": "#/$defs/cycleStatus"
+            },
+
+            "to": {
+              "$ref": "#/$defs/cycleStatus"
+            },
+
+            "changeProposed": {
+              "type": "boolean"
+            }
+          }
+        },
+
+        "currentBlocker": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "from",
+            "to",
+            "changeProposed"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+
+            "to": {
+              "type": "string"
+            },
+
+            "changeProposed": {
+              "type": "boolean"
+            }
+          }
+        },
+
+        "nextAction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "from",
+            "to",
+            "changeProposed",
+            "proposedOwner"
+          ],
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+
+            "to": {
+              "type": "string"
+            },
+
+            "changeProposed": {
+              "type": "boolean"
+            },
+
+            "proposedOwner": {
+              "type": "string",
+              "enum": [
+                "WALLTECH",
+                "COUNTERPARTY",
+                "CUSTOMER",
+                "UNKNOWN",
+                "NONE"
+              ]
+            }
+          }
+        },
+
+        "missingCommercialDataAdditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+
+        "missingCommercialDataRemovals": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+
+    "evidenceBasis": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/evidenceBasis"
+      }
+    },
+
+    "decisionGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approvalRequired",
+        "approvalStatus",
+        "approvedBy",
+        "approvedAt"
+      ],
+      "properties": {
+        "approvalRequired": {
+          "const": true
+        },
+
+        "approvalStatus": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "APPROVED",
+            "REJECTED"
+          ]
+        },
+
+        "approvedBy": {
+          "type": ["string", "null"]
+        },
+
+        "approvedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+
+    "automaticApplication": {
+      "const": false
+    },
+
+    "cycleMutationPerformed": {
+      "const": false
+    },
+
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+
+  "$defs": {
+    "cycleStatus": {
+      "type": "string",
+      "enum": [
+        "NEW",
+        "ACTIVE",
+        "WAITING_ON_WALLTECH",
+        "WAITING_ON_COUNTERPARTY",
+        "WAITING_ON_SUPPLIER",
+        "BLOCKED",
+        "QUALIFIED",
+        "QUOTATION",
+        "NEGOTIATION",
+        "CONTRACT",
+        "EXCHANGE",
+        "CLOSED_WON",
+        "CLOSED_LOST",
+        "PARKED"
+      ]
+    },
+
+    "evidenceBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "changeTarget",
+        "evidenceType",
+        "evidenceId",
+        "signalType",
+        "semanticValue",
+        "certainty"
+      ],
+      "properties": {
+        "changeTarget": {
+          "type": "string",
+          "enum": [
+            "STATUS",
+            "CURRENT_BLOCKER",
+            "NEXT_ACTION",
+            "MISSING_COMMERCIAL_DATA"
+          ]
+        },
+
+        "evidenceType": {
+          "type": "string",
+          "enum": [
+            "MAIL_EVIDENCE",
+            "RESPONSE_EXPECTATION_EVIDENCE",
+            "COMMERCIAL_COMMUNICATION_INTERPRETATION"
+          ]
+        },
+
+        "evidenceId": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "signalType": {
+          "type": ["string", "null"]
+        },
+
+        "semanticValue": {
+          "type": ["string", "null"]
+        },
+
+        "certainty": {
+          "type": "string",
+          "enum": [
+            "EXPLICIT",
+            "QUALIFIED",
+            "STRUCTURAL"
+          ]
+        }
+      }
+    }
+  }
+}
