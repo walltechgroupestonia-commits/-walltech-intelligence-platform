@@ -1,0 +1,28 @@
+{
+  "name": "walltech-intelligence-platform",
+  "version": "1.0.0",
+  "description": "Walltech Communication Intelligence is the operational layer that connects:",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/walltechgroupestonia-commits/-walltech-intelligence-platform.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/walltechgroupestonia-commits/-walltech-intelligence-platform/issues"
+  },
+  "homepage": "https://github.com/walltechgroupestonia-commits/-walltech-intelligence-platform#readme",
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
+  }
+}

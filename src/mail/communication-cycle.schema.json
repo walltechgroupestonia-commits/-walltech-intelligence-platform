@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Walltech Communication Cycle",
+  "type": "object",
+  "required": [
+    "dealId",
+    "dealName",
+    "source",
+    "mailbox",
+    "status",
+    "priority",
+    "currentBlocker",
+    "nextAction"
+  ],
+  "properties": {
+    "dealId": { "type": "string" },
+    "dealName": { "type": "string" },
+    "source": { "type": "string" },
+    "mailbox": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": [
+        "NEW",
+        "ACTIVE",
+        "WAITING_ON_WALLTECH",
+        "WAITING_ON_COUNTERPARTY",
+        "WAITING_ON_SUPPLIER",
+        "BLOCKED",
+        "QUALIFIED",
+        "QUOTATION",
+        "NEGOTIATION",
+        "CONTRACT",
+        "EXCHANGE",
+        "CLOSED_WON",
+        "CLOSED_LOST",
+        "PARKED"
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+    },
+    "primaryContact": {
+      "type": "object"
+    },
+    "otherContacts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "commercialValue": {
+      "type": ["number", "null"]
+    },
+    "feeValue": {
+      "type": ["number", "null"]
+    },
+    "revenueStatus": {
+      "type": "string"
+    },
+    "marginStatus": {
+      "type": "string"
+    },
+    "lastCounterpartyResponseDate": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "walltechFollowUps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "date"
+      }
+    },
+    "missingCommercialData": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "currentBlocker": {
+      "type": "string"
+    },
+    "nextAction": {
+      "type": "string"
+    },
+    "timeToRevenueStatus": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}
