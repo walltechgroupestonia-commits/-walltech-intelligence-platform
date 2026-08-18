@@ -1,0 +1,341 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/relationship-response-expectation.schema.json",
+  "title": "Walltech Relationship Response Expectation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "relationshipExpectationVersion",
+    "relationshipExpectationType",
+    "source",
+    "relationshipCount",
+    "relationships",
+    "generatedAt"
+  ],
+  "properties": {
+    "relationshipExpectationVersion": {
+      "const": "1.0"
+    },
+    "relationshipExpectationType": {
+      "const": "RELATIONSHIP_RESPONSE_EXPECTATION"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accountKey",
+        "mailboxUser",
+        "provider",
+        "sequenceType",
+        "sequenceRelationshipCount",
+        "responseExpectationEvidenceCount"
+      ],
+      "properties": {
+        "accountKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mailboxUser": {
+          "type": "string",
+          "format": "email"
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequenceType": {
+          "const": "COMMUNICATION_SEQUENCES"
+        },
+        "sequenceRelationshipCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "responseExpectationEvidenceCount": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "relationshipCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "relationships": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/relationshipExpectation"
+      }
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "sha256Id": {
+      "type": "string",
+      "pattern": "^RRE-[a-f0-9]{64}$"
+    },
+    "relationshipId": {
+      "type": "string",
+      "pattern": "^CCR-[a-f0-9]{64}$"
+    },
+    "mailEvidenceId": {
+      "type": "string",
+      "pattern": "^ME-[a-f0-9]{64}$"
+    },
+    "responseExpectationEvidenceId": {
+      "type": "string",
+      "pattern": "^REE-[a-f0-9]{64}$"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "INBOUND",
+        "OUTBOUND",
+        "SELF",
+        "AMBIGUOUS"
+      ]
+    },
+    "expectedResponder": {
+      "type": "string",
+      "enum": [
+        "COUNTERPARTY",
+        "WALLTECH",
+        "UNKNOWN",
+        "NONE"
+      ]
+    },
+    "expectationDetermination": {
+      "type": "string",
+      "enum": [
+        "EXPECTED",
+        "NOT_ESTABLISHED",
+        "AMBIGUOUS"
+      ]
+    },
+    "eventExpectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequenceIndex",
+        "observedAt",
+        "direction",
+        "mailEvidenceId",
+        "responseExpectationEvidenceId",
+        "determination",
+        "expectedResponder",
+        "explicitSignalCount",
+        "basis"
+      ],
+      "properties": {
+        "sequenceIndex": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "observedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "direction": {
+          "$ref": "#/$defs/direction"
+        },
+        "mailEvidenceId": {
+          "$ref": "#/$defs/mailEvidenceId"
+        },
+        "responseExpectationEvidenceId": {
+          "$ref": "#/$defs/responseExpectationEvidenceId"
+        },
+        "determination": {
+          "$ref": "#/$defs/expectationDetermination"
+        },
+        "expectedResponder": {
+          "$ref": "#/$defs/expectedResponder"
+        },
+        "explicitSignalCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "establishedExpectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceSequenceIndex",
+        "sourceMailEvidenceId",
+        "sourceResponseExpectationEvidenceId",
+        "expectedResponder",
+        "expectedResponseDirection",
+        "laterExpectedResponderMessageObserved",
+        "laterObservedSequenceIndex",
+        "laterObservedMailEvidenceId",
+        "laterObservedAt",
+        "semanticSatisfactionDetermination"
+      ],
+      "properties": {
+        "sourceSequenceIndex": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sourceMailEvidenceId": {
+          "$ref": "#/$defs/mailEvidenceId"
+        },
+        "sourceResponseExpectationEvidenceId": {
+          "$ref": "#/$defs/responseExpectationEvidenceId"
+        },
+        "expectedResponder": {
+          "type": "string",
+          "enum": [
+            "COUNTERPARTY",
+            "WALLTECH"
+          ]
+        },
+        "expectedResponseDirection": {
+          "type": "string",
+          "enum": [
+            "INBOUND",
+            "OUTBOUND"
+          ]
+        },
+        "laterExpectedResponderMessageObserved": {
+          "type": "boolean"
+        },
+        "laterObservedSequenceIndex": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "laterObservedMailEvidenceId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/mailEvidenceId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "laterObservedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "semanticSatisfactionDetermination": {
+          "const": "UNDETERMINED"
+        }
+      }
+    },
+    "relationshipExpectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relationshipResponseExpectationId",
+        "candidateRelationshipId",
+        "subjectKey",
+        "sequenceMessageCount",
+        "eventExpectationCount",
+        "events",
+        "establishedExpectationCount",
+        "openExpectationCount",
+        "laterResponseObservedCount",
+        "expectations",
+        "relationshipDetermination",
+        "semanticSatisfactionInference",
+        "unansweredInference",
+        "automaticFollowUpInference",
+        "commercialStateInference"
+      ],
+      "properties": {
+        "relationshipResponseExpectationId": {
+          "$ref": "#/$defs/sha256Id"
+        },
+        "candidateRelationshipId": {
+          "$ref": "#/$defs/relationshipId"
+        },
+        "subjectKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequenceMessageCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "eventExpectationCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/eventExpectation"
+          }
+        },
+        "establishedExpectationCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "openExpectationCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "laterResponseObservedCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expectations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/establishedExpectation"
+          }
+        },
+        "relationshipDetermination": {
+          "type": "string",
+          "enum": [
+            "NO_EXPLICIT_EXPECTATION",
+            "OPEN_EXPECTATION_NO_LATER_RESPONSE",
+            "LATER_RESPONSE_OBSERVED",
+            "AMBIGUOUS_EXPECTATION"
+          ]
+        },
+        "semanticSatisfactionInference": {
+          "const": "NONE"
+        },
+        "unansweredInference": {
+          "const": "NONE"
+        },
+        "automaticFollowUpInference": {
+          "const": "NONE"
+        },
+        "commercialStateInference": {
+          "const": "NONE"
+        }
+      }
+    }
+  }
+}
