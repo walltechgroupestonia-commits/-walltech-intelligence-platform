@@ -131,6 +131,21 @@ Aruba Mail Intelligence Automation
 - Deterministic MailEvidence ID verified.
 - Invalid MailEvidence schema input is rejected.
 - Acquisition/normalization cross-link mismatch is rejected.
+- AZIONE 56 completed.
+- End-to-end INFO MailEvidence orchestrator implemented.
+- One controlled command now joins exact IMAP UID acquisition, RFC822 normalization, MailEvidence build and schema validation.
+- INFO / INBOX UID 17 one-command orchestration verified.
+- INFO / INBOX.Sent UID 10 one-command orchestration verified.
+- UIDVALIDITY + UID identity continuity verified through orchestration.
+- Deterministic MailEvidence IDs remain unchanged through orchestration.
+- Orchestrated acquisition remains READ_ONLY.
+- Temporary raw RFC822 acquisition evidence is automatically removed after processing.
+- No raw .eml or .msg evidence is retained inside the repository.
+- STDOUT MailEvidence mode verified.
+- Explicit output-file MailEvidence mode verified.
+- Invalid UID input is rejected.
+- Foundation and component regression gates remain green.
+- INFO acquisition, normalization and MailEvidence orchestration layer is complete.
 - Foundation regression remains green.
 
 ### EVIDENCE
@@ -221,6 +236,32 @@ MailEvidence integrity:
     INVALID CONTRACT: REJECTED
     CROSS-LINK MISMATCH: REJECTED
 
+INFO MailEvidence Orchestrator v1:
+
+    INBOX / UID 17:
+    ONE COMMAND: PASS
+    UIDVALIDITY: 1784554448
+    EVIDENCE ID:
+    ME-fea3dd270032446c25c6d9b323760dc694c0224070fdf688c913ba0b4e6ef155
+
+    INBOX.Sent / UID 10:
+    ONE COMMAND: PASS
+    UIDVALIDITY: 1784554450
+    EVIDENCE ID:
+    ME-0092fe49560909081981c82e6db8ac3390a8a991f211c86bf9d0506907838091
+
+Orchestration contract:
+
+    ACCOUNT: INFO
+    ACCESS MODE: READ_ONLY
+    RAW RFC822 ACQUISITION: PASS
+    NORMALIZATION: PASS
+    MAILEVIDENCE BUILD: PASS
+    MAILEVIDENCE VALIDATION: PASS
+    TEMP RAW EVIDENCE: CLEANED
+    BODY / BINARY LEAK: NONE
+    INVALID UID: REJECTED
+
 ### SECURITY NOTE
 
 A mailbox message from comunicazioni@staff.aruba.it with subject
@@ -231,7 +272,6 @@ It is not currently classified as a blocker and no separate security cycle has b
 
 ### OPEN
 
-- Automated acquisition orchestration.
 
 ### BLOCKED
 
@@ -260,9 +300,9 @@ None for Communication Intelligence Foundation v1.
 
 ## NEXT ACTION
 
-AZIONE 56 — create the end-to-end read-only MailEvidence orchestrator for the INFO mailbox, joining exact UID acquisition, RFC822 normalization, MailEvidence build and validation behind one controlled command.
+AZIONE 58 — Communication Cycle Detection v1: derive candidate communication relationships and message direction from verified INFO MailEvidence records without changing the underlying mailbox or CommunicationCycle Foundation contract.
 
-Do not open communication-cycle detection, unanswered/follow-up detection, CRM routing or the marketing mailbox until acquisition orchestration is complete.
+This begins a new technical layer. Do not mix unanswered/follow-up logic, CRM routing or the marketing mailbox into the initial Communication Cycle Detection action.
 
 ## OPERATING RULE
 
