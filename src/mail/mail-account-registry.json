@@ -1,0 +1,54 @@
+{
+  "registryVersion": "1.0",
+  "registryType": "MAIL_ACCOUNT_REGISTRY",
+  "accounts": [
+    {
+      "accountKey": "INFO",
+      "mailboxUser": "info@walltechgroup.eu",
+      "provider": "ARUBA_IMAP",
+      "providerAccountKey": "INFO",
+      "providerAdapter": "ARUBA_EXISTING_V1",
+      "activationStatus": "ACTIVE",
+      "defaultMailboxPaths": [
+        "INBOX",
+        "INBOX.Sent"
+      ],
+      "routingAddresses": [
+        "info@walltechgroup.eu"
+      ],
+      "upstreamPipelineReuse": true
+    },
+    {
+      "accountKey": "MARKETING",
+      "mailboxUser": "marketingdept@walltechgroup.eu",
+      "provider": "ARUBA_IMAP",
+      "providerAccountKey": "MARKETING",
+      "providerAdapter": "ARUBA_EXISTING_V1",
+      "activationStatus": "CONFIGURED_PENDING_VALIDATION",
+      "defaultMailboxPaths": [
+        "INBOX",
+        "INBOX.Sent"
+      ],
+      "routingAddresses": [
+        "marketingdept@walltechgroup.eu"
+      ],
+      "upstreamPipelineReuse": true
+    },
+    {
+      "accountKey": "GMAIL_ESTONIA",
+      "mailboxUser": "walltechgroup.estonia@gmail.com",
+      "provider": "GMAIL_IMAP",
+      "providerAccountKey": "GMAIL_ESTONIA",
+      "providerAdapter": "GMAIL_PENDING_V1",
+      "activationStatus": "CONFIGURED_PENDING_PROVIDER_ADAPTER",
+      "defaultMailboxPaths": [
+        "INBOX",
+        "[Gmail]/Sent Mail"
+      ],
+      "routingAddresses": [
+        "walltechgroup.estonia@gmail.com"
+      ],
+      "upstreamPipelineReuse": true
+    }
+  ]
+}

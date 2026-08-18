@@ -436,11 +436,66 @@ Master governance reference:
     BATTLE_PLAN.md
 
 
+
+## AZIONE 68 CHECKPOINT EVIDENCE
+
+AZIONE 68 completed.
+
+Multi-Account Communication Productization v1 foundation:
+
+    ACCOUNT REGISTRY: PASS
+    ACCOUNTS: 3
+
+    INFO:
+    info@walltechgroup.eu
+    PROVIDER: ARUBA_IMAP
+    STATUS: ACTIVE
+
+    MARKETING:
+    marketingdept@walltechgroup.eu
+    PROVIDER: ARUBA_IMAP
+    STATUS: CONFIGURED_PENDING_VALIDATION
+
+    GMAIL_ESTONIA:
+    walltechgroup.estonia@gmail.com
+    PROVIDER: GMAIL_IMAP
+    STATUS: CONFIGURED_PENDING_PROVIDER_ADAPTER
+
+Generic acquisition:
+
+    ACCOUNT RESOLVER: PASS
+    UNKNOWN ACCOUNT: REJECTED
+    EXISTING EVIDENCE PIPELINE: REUSED
+    PIPELINE DUPLICATION: NONE
+
+INFO live acceptance:
+
+    MAILBOX: INBOX.Sent
+    UID: 10
+
+    EVIDENCE:
+    ME-0092fe49560909081981c82e6db8ac3390a8a991f211c86bf9d0506907838091
+
+    EXISTING MAILEVIDENCE ID PRESERVED: YES
+
+Safety:
+
+    UNVALIDATED MARKETING ACCESS: BLOCKED
+    PENDING GMAIL ADAPTER ACCESS: BLOCKED
+    FOUNDATION REGRESSION: PASS
+    SECURITY: PASS
+    RAW MAIL IN REPOSITORY: NONE
+
+Architecture result:
+
+    Future accounts can be introduced through registry configuration
+    and provider adapters without rebuilding MailEvidence,
+    normalization, sequence, relationship or response-expectation layers.
+
+
 ## NEXT ACTION
 
-AZIONE 68 — Multi-Account Communication Productization v1: replace INFO-specific mailbox assumptions with a config-driven account/provider registry, preserving the existing evidence pipeline. Initial target accounts are info@walltechgroup.eu, marketingdept@walltechgroup.eu and walltechgroup.estonia@gmail.com.
-
-The implementation must support future accounts through configuration and provider adapters without rebuilding MailEvidence, normalization, relationship, sequence or response-expectation layers. Do not reopen deep semantic satisfaction work. The production target is the Actionable Communication Queue defined in BATTLE_PLAN.md.
+AZIONE 70 — MARKETING Account Validation & Activation v1: validate real read-only access for marketingdept@walltechgroup.eu, verify mailbox topology and exact provider identity, then activate MARKETING in the account registry only if live evidence passes. Reuse the generic acquisition pipeline; do not create a separate Marketing MailEvidence pipeline.
 
 ## OPERATING RULE
 
