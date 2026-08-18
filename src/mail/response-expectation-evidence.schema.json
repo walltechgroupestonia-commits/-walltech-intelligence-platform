@@ -1,0 +1,309 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/response-expectation-evidence.schema.json",
+  "title": "Walltech Response Expectation Evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidenceVersion",
+    "evidenceType",
+    "responseExpectationEvidenceId",
+    "source",
+    "message",
+    "contentIntegrity",
+    "contentScope",
+    "explicitSignalCount",
+    "signals",
+    "determination",
+    "expectedResponder",
+    "basis",
+    "commercialStateInference",
+    "generatedAt"
+  ],
+  "properties": {
+    "evidenceVersion": {
+      "const": "1.0"
+    },
+    "evidenceType": {
+      "const": "RESPONSE_EXPECTATION_EVIDENCE"
+    },
+    "responseExpectationEvidenceId": {
+      "type": "string",
+      "pattern": "^REE-[a-f0-9]{64}$"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mailEvidenceId",
+        "accountKey",
+        "mailboxUser",
+        "mailboxPath",
+        "uidValidity",
+        "uid",
+        "rawSourceSha256",
+        "textSha256",
+        "htmlSha256"
+      ],
+      "properties": {
+        "mailEvidenceId": {
+          "type": "string",
+          "pattern": "^ME-[a-f0-9]{64}$"
+        },
+        "accountKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mailboxUser": {
+          "type": "string",
+          "format": "email"
+        },
+        "mailboxPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uidValidity": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "uid": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "rawSourceSha256": {
+          "$ref": "#/$defs/nullableSha256"
+        },
+        "textSha256": {
+          "$ref": "#/$defs/nullableSha256"
+        },
+        "htmlSha256": {
+          "$ref": "#/$defs/nullableSha256"
+        }
+      }
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "messageId",
+        "subject",
+        "direction"
+      ],
+      "properties": {
+        "messageId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "subject": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "direction": {
+          "$ref": "#/$defs/direction"
+        }
+      }
+    },
+    "contentIntegrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rawSha256Match",
+        "textSha256Match",
+        "htmlSha256Match",
+        "messageIdMatch",
+        "subjectMatch",
+        "verified"
+      ],
+      "properties": {
+        "rawSha256Match": {
+          "type": "boolean"
+        },
+        "textSha256Match": {
+          "type": "boolean"
+        },
+        "htmlSha256Match": {
+          "type": "boolean"
+        },
+        "messageIdMatch": {
+          "type": "boolean"
+        },
+        "subjectMatch": {
+          "type": "boolean"
+        },
+        "verified": {
+          "const": true
+        }
+      }
+    },
+    "explicitSignalCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/signal"
+      }
+    },
+    "determination": {
+      "type": "string",
+      "enum": [
+        "EXPECTED",
+        "NOT_ESTABLISHED",
+        "AMBIGUOUS"
+      ]
+    },
+    "expectedResponder": {
+      "type": "string",
+      "enum": [
+        "COUNTERPARTY",
+        "WALLTECH",
+        "UNKNOWN",
+        "NONE"
+      ]
+    },
+    "basis": {
+      "type": "string",
+      "enum": [
+        "EXPLICIT_RESPONSE_EXPECTATION_SIGNAL",
+        "NO_EXPLICIT_RESPONSE_EXPECTATION_SIGNAL",
+        "CONFLICTING_RESPONSE_EXPECTATION_SIGNALS"
+      ]
+    },
+    "commercialStateInference": {
+      "const": "NONE"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "contentScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scopeType",
+        "extractionPolicy",
+        "authoredTextSha256",
+        "authoredTextCharacters",
+        "quotedHistoryDetected",
+        "quoteBoundaryType",
+        "quoteBoundaryLine"
+      ],
+      "properties": {
+        "scopeType": {
+          "const": "AUTHORED_TEXT_ONLY"
+        },
+        "extractionPolicy": {
+          "const": "CONSERVATIVE_QUOTED_HISTORY_TRUNCATION"
+        },
+        "authoredTextSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "authoredTextCharacters": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quotedHistoryDetected": {
+          "type": "boolean"
+        },
+        "quoteBoundaryType": {
+          "type": "string",
+          "enum": [
+            "NONE",
+            "PREFIXED_QUOTE",
+            "ORIGINAL_MESSAGE_SEPARATOR",
+            "FORWARDED_MESSAGE",
+            "ON_WROTE",
+            "ITALIAN_WROTE",
+            "HEADER_BLOCK"
+          ]
+        },
+        "quoteBoundaryLine": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "nullableSha256": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "INBOUND",
+        "OUTBOUND",
+        "SELF",
+        "AMBIGUOUS"
+      ]
+    },
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ruleId",
+        "signalType",
+        "expectedResponder",
+        "matchedPhrase",
+        "evidenceExcerpt",
+        "excerptSha256"
+      ],
+      "properties": {
+        "ruleId": {
+          "type": "string",
+          "pattern": "^REE_RULE_[A-Z0-9_]+$"
+        },
+        "signalType": {
+          "type": "string",
+          "enum": [
+            "EXPLICIT_REQUEST",
+            "EXPLICIT_PROMISE"
+          ]
+        },
+        "expectedResponder": {
+          "type": "string",
+          "enum": [
+            "COUNTERPARTY",
+            "WALLTECH",
+            "UNKNOWN"
+          ]
+        },
+        "matchedPhrase": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceExcerpt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 320
+        },
+        "excerptSha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    }
+  }
+}

@@ -198,6 +198,28 @@ Aruba Mail Intelligence Automation
 - Broken latest-evidence links are rejected.
 - Commercial state inference remains NONE.
 - Foundation, Detection and Sequence regression gates remain green.
+- AZIONE 64 completed.
+- Response Expectation Evidence v1 contract implemented.
+- Generic Response Expectation Evidence detector implemented.
+- Generic Response Expectation Evidence validator implemented.
+- Response expectation analysis is linked to exact MailEvidence and verified normalized-content hashes.
+- Response expectation analysis scope is AUTHORED_TEXT_ONLY.
+- Conservative quoted-history truncation implemented.
+- Quoted reply history is excluded from response-expectation signal detection.
+- Quoted-history false-positive guardrail verified.
+- Authored explicit-request positive detection verified.
+- Quectel INBOX.Sent UID 10 quoted history detected at PREFIXED_QUOTE boundary.
+- Quectel INBOX.Sent UID 10 authored-text scope contains 105 characters before quoted history.
+- Quectel latest outbound authored text contains zero explicit response-expectation signals under v1 rules.
+- Quectel latest outbound Response Expectation determination is NOT_ESTABLISHED.
+- Quectel latest outbound expected responder is NONE.
+- Corrected Response Expectation Evidence ID is deterministic.
+- Broken normalized-content links are rejected.
+- Invalid authored-scope Response Expectation objects are rejected.
+- Unanswered inference remains outside Response Expectation Evidence v1.
+- Follow-up inference remains outside Response Expectation Evidence v1.
+- Commercial state inference remains NONE.
+- Foundation and upstream pipeline regression gates remain green.
 - Foundation regression remains green.
 
 ### EVIDENCE
@@ -352,9 +374,9 @@ None for Communication Intelligence Foundation v1.
 
 ## NEXT ACTION
 
-AZIONE 64 — Response Expectation Evidence v1: inspect verified normalized message content for explicit evidence that a reply, confirmation, availability, quotation or other response was requested or promised, while preserving exact MailEvidence linkage.
+AZIONE 66 — Relationship Response Expectation v1: evaluate Response Expectation Evidence across the ordered verified messages of a candidate relationship, preserving per-message MailEvidence and REE linkage and determining whether any explicit response expectation remains unresolved by a later observed message.
 
-Do not derive CRM routing, commercial status or automatic follow-up policy in AZIONE 64. The sole product is evidence for or against an actual response expectation.
+Do not infer automatic follow-up, CRM routing or commercial status in AZIONE 66. Relationship-level expectation must be proven before an unanswered state can be considered.
 
 ## OPERATING RULE
 
