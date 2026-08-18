@@ -101,6 +101,19 @@ Aruba Mail Intelligence Automation
 - Message byte count independently verified.
 - IMAP flags verified unchanged before and after content acquisition.
 - Raw evidence remains temporary and outside the Git repository.
+- AZIONE 52 completed.
+- RFC822 normalization layer implemented.
+- PostalMime integrated for MIME/RFC822 parsing.
+- Normalized text extraction verified.
+- Normalized HTML extraction verified.
+- Attachment metadata extraction verified.
+- Attachment binary content is not stored in normalized JSON.
+- Attachment size and SHA-256 are preserved as evidence metadata.
+- Raw-message SHA-256 reference is preserved through normalization.
+- Message-ID continuity from acquisition to normalization verified.
+- INBOX UID 17 normalization verified.
+- INBOX.Sent UID 10 normalization verified.
+- Foundation and read-only mailbox regression gates remain green.
 
 ### EVIDENCE
 
@@ -144,6 +157,28 @@ Evidence integrity:
     UID SELECTOR: PASS
     FLAGS UNCHANGED: true
 
+RFC822 normalization:
+
+    INBOX / UID 17
+    NORMALIZATION: PASS
+    TEXT CHARACTERS: 3265
+    HTML CHARACTERS: 33586
+    ATTACHMENTS: 3
+
+    INBOX.Sent / UID 10
+    NORMALIZATION: PASS
+    TEXT CHARACTERS: 4457
+    HTML CHARACTERS: 41206
+    ATTACHMENTS: 0
+
+Normalization contract:
+
+    RAW SHA-256 REFERENCE: PRESERVED
+    MESSAGE-ID CONTINUITY: PASS
+    TEXT / HTML: EXTRACTED
+    ATTACHMENT METADATA: EXTRACTED
+    ATTACHMENT BINARY IN JSON: NOT STORED
+
 ### SECURITY NOTE
 
 A mailbox message from comunicazioni@staff.aruba.it with subject
@@ -154,7 +189,6 @@ It is not currently classified as a blocker and no separate security cycle has b
 
 ### OPEN
 
-- Persistent normalized mail evidence.
 - Automated acquisition orchestration.
 
 ### BLOCKED
@@ -184,9 +218,9 @@ None for Communication Intelligence Foundation v1.
 
 ## NEXT ACTION
 
-AZIONE 52 — parse acquired RFC822 message content into normalized text, HTML and attachment metadata while preserving the raw-message SHA-256 evidence reference.
+AZIONE 54 — create a persistent normalized MailEvidence object contract linking mailbox, UID, Message-ID, raw-message SHA-256, normalized content hashes and attachment evidence metadata.
 
-Do not open communication-cycle detection, unanswered/follow-up detection, CRM routing or the marketing mailbox until the mail acquisition and normalization layer is complete.
+Do not open communication-cycle detection, unanswered/follow-up detection, CRM routing or the marketing mailbox until the mail evidence layer is complete.
 
 ## OPERATING RULE
 
