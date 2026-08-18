@@ -92,6 +92,15 @@ Aruba Mail Intelligence Automation
 - Current metadata acquisition includes seq, UID, Message-ID, dates, subject, from, to, cc, reply-to, flags and message size.
 - .env remains ignored by Git.
 - Foundation v1 regression validation remains green.
+- AZIONE 50 completed.
+- Exact message acquisition by IMAP UID implemented.
+- Full RFC822 message source acquisition verified.
+- INBOX UID 17 acquired successfully in READ_ONLY mode.
+- INBOX.Sent UID 10 acquired successfully in READ_ONLY mode.
+- SHA-256 evidence generated for exact raw message source.
+- Message byte count independently verified.
+- IMAP flags verified unchanged before and after content acquisition.
+- Raw evidence remains temporary and outside the Git repository.
 
 ### EVIDENCE
 
@@ -114,6 +123,27 @@ Foundation regression:
     COMMUNICATION CYCLE: VALID
     DEAL: QUECTEL-EC21-2026-001
 
+Message content acquisition:
+
+    INBOX / UID 17
+    ARUBA MESSAGE CONTENT ACQUISITION: PASS
+    MODE: READ_ONLY
+    SOURCE BYTES: 248036
+    FLAGS UNCHANGED: true
+
+    INBOX.Sent / UID 10
+    ARUBA MESSAGE CONTENT ACQUISITION: PASS
+    MODE: READ_ONLY
+    SOURCE BYTES: 52825
+    FLAGS UNCHANGED: true
+
+Evidence integrity:
+
+    RFC822 SOURCE: PASS
+    SHA-256: PASS
+    UID SELECTOR: PASS
+    FLAGS UNCHANGED: true
+
 ### SECURITY NOTE
 
 A mailbox message from comunicazioni@staff.aruba.it with subject
@@ -124,7 +154,6 @@ It is not currently classified as a blocker and no separate security cycle has b
 
 ### OPEN
 
-- Message body/content acquisition.
 - Persistent normalized mail evidence.
 - Automated acquisition orchestration.
 
@@ -155,9 +184,9 @@ None for Communication Intelligence Foundation v1.
 
 ## NEXT ACTION
 
-AZIONE 50 — add read-only message content acquisition by UID for the INFO mailbox.
+AZIONE 52 — parse acquired RFC822 message content into normalized text, HTML and attachment metadata while preserving the raw-message SHA-256 evidence reference.
 
-Do not open communication-cycle detection, follow-up detection, CRM routing or the marketing mailbox before this acquisition layer is complete.
+Do not open communication-cycle detection, unanswered/follow-up detection, CRM routing or the marketing mailbox until the mail acquisition and normalization layer is complete.
 
 ## OPERATING RULE
 
