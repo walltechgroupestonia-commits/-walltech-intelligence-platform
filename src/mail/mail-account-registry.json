@@ -24,7 +24,7 @@
       "provider": "ARUBA_IMAP",
       "providerAccountKey": "MARKETING",
       "providerAdapter": "ARUBA_EXISTING_V1",
-      "activationStatus": "CONFIGURED_PENDING_VALIDATION",
+      "activationStatus": "ACTIVE",
       "defaultMailboxPaths": [
         "INBOX",
         "INBOX.Sent"

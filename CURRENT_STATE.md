@@ -493,9 +493,72 @@ Architecture result:
     normalization, sequence, relationship or response-expectation layers.
 
 
+
+## AZIONE 70 CHECKPOINT EVIDENCE
+
+AZIONE 70 completed.
+
+MARKETING live validation:
+
+    ACCOUNT:
+    marketingdept@walltechgroup.eu
+
+    PROVIDER:
+    ARUBA_IMAP
+
+    CREDENTIALS:
+    VALID
+
+    ACCESS MODE:
+    READ_ONLY
+
+    MAILBOX TOPOLOGY:
+    INBOX
+    INBOX.Sent
+
+    INBOX MESSAGE COUNT AT VALIDATION:
+    4
+
+    SENT MESSAGE COUNT AT VALIDATION:
+    0
+
+    LIVE SAMPLE:
+    MAILBOX: INBOX
+    UID: 4
+    UIDVALIDITY: 1786715741
+
+    MAILEVIDENCE:
+    ME-df05a540c7b01800a2822b2d8d90202bfd5d702a56c01b23ebb1acbb59d12958
+
+    GENERIC PIPELINE REUSED:
+    YES
+
+Final account state:
+
+    INFO: ACTIVE
+    MARKETING: ACTIVE
+    GMAIL_ESTONIA: CONFIGURED_PENDING_PROVIDER_ADAPTER
+
+Regression / safety:
+
+    INFO KNOWN MAILEVIDENCE: PRESERVED
+    GMAIL EXPECTED-FAILURE TEST: PASS
+    EXPECTED FAILURE DOES NOT TRIGGER ROLLBACK
+    FOUNDATION: VALID
+    SECURITY: PASS
+    RAW MAIL LEAK: NONE
+
+Architecture result:
+
+    Two real Aruba accounts now operate through the same generic
+    acquisition and MailEvidence pipeline.
+
+    No Marketing-specific MailEvidence pipeline was created.
+
+
 ## NEXT ACTION
 
-AZIONE 70 — MARKETING Account Validation & Activation v1: validate real read-only access for marketingdept@walltechgroup.eu, verify mailbox topology and exact provider identity, then activate MARKETING in the account registry only if live evidence passes. Reuse the generic acquisition pipeline; do not create a separate Marketing MailEvidence pipeline.
+AZIONE 72 — GMAIL_ESTONIA Provider Adapter v1: implement and validate the Gmail provider boundary for walltechgroup.estonia@gmail.com while reusing the existing generic MailEvidence and intelligence pipeline. This action is queued after the current Property Decision Engine priority window defined in BATTLE_PLAN.md; do not duplicate normalization, MailEvidence, sequence, relationship or response-expectation layers.
 
 ## OPERATING RULE
 
