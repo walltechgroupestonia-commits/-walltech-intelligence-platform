@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/response-state-evidence.schema.json",
+  "title": "Walltech Response-State Evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "responseStateVersion",
+    "responseStateType",
+    "source",
+    "relationshipCount",
+    "relationships",
+    "generatedAt"
+  ],
+  "properties": {
+    "responseStateVersion": {
+      "const": "1.0"
+    },
+    "responseStateType": {
+      "const": "RESPONSE_STATE_EVIDENCE"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accountKey",
+        "mailboxUser",
+        "provider",
+        "sequenceType",
+        "sequenceRelationshipCount"
+      ],
+      "properties": {
+        "accountKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mailboxUser": {
+          "type": "string",
+          "format": "email"
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequenceType": {
+          "const": "COMMUNICATION_SEQUENCES"
+        },
+        "sequenceRelationshipCount": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "relationshipCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "relationships": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/responseStateRelationship"
+      }
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "relationshipId": {
+      "type": "string",
+      "pattern": "^CCR-[a-f0-9]{64}$"
+    },
+    "responseStateEvidenceId": {
+      "type": "string",
+      "pattern": "^RSE-[a-f0-9]{64}$"
+    },
+    "evidenceId": {
+      "type": "string",
+      "pattern": "^ME-[a-f0-9]{64}$"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "INBOUND",
+        "OUTBOUND",
+        "SELF",
+        "AMBIGUOUS"
+      ]
+    },
+    "observedState": {
+      "type": "string",
+      "enum": [
+        "LATEST_INBOUND",
+        "LATEST_OUTBOUND",
+        "LATEST_SELF",
+        "LATEST_AMBIGUOUS",
+        "NO_TIMESTAMPED_EVENT"
+      ]
+    },
+    "sequenceEvidenceQuality": {
+      "type": "string",
+      "enum": [
+        "COMPLETE_TIMESTAMP_ORDERING",
+        "PARTIAL_TIMESTAMP_ORDERING",
+        "NO_TIMESTAMPED_EVENTS"
+      ]
+    },
+    "responseStateRelationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "responseStateEvidenceId",
+        "candidateRelationshipId",
+        "subjectKey",
+        "sequenceMessageCount",
+        "sequenceEvidenceQuality",
+        "orderingComplete",
+        "timestampCoverage",
+        "latestObservedDirection",
+        "latestObservedAt",
+        "latestObservedEvidenceId",
+        "observedState",
+        "responseExpectationEvidenceAvailable",
+        "responseExpectationDetermination",
+        "responseExpectationBasis",
+        "unansweredDetermination",
+        "unansweredBasis",
+        "followUpDetermination",
+        "followUpBasis",
+        "commercialStateInference"
+      ],
+      "properties": {
+        "responseStateEvidenceId": {
+          "$ref": "#/$defs/responseStateEvidenceId"
+        },
+        "candidateRelationshipId": {
+          "$ref": "#/$defs/relationshipId"
+        },
+        "subjectKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequenceMessageCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sequenceEvidenceQuality": {
+          "$ref": "#/$defs/sequenceEvidenceQuality"
+        },
+        "orderingComplete": {
+          "type": "boolean"
+        },
+        "timestampCoverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "latestObservedDirection": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/direction"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "latestObservedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "latestObservedEvidenceId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/evidenceId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observedState": {
+          "$ref": "#/$defs/observedState"
+        },
+
+        "responseExpectationEvidenceAvailable": {
+          "const": false
+        },
+
+        "responseExpectationDetermination": {
+          "const": "UNDETERMINED"
+        },
+
+        "responseExpectationBasis": {
+          "const": "NO_RESPONSE_OBLIGATION_EVIDENCE_IN_SEQUENCE_V1"
+        },
+
+        "unansweredDetermination": {
+          "const": "UNDETERMINED"
+        },
+
+        "unansweredBasis": {
+          "const": "REQUIRES_RESPONSE_EXPECTATION_EVIDENCE"
+        },
+
+        "followUpDetermination": {
+          "const": "UNDETERMINED"
+        },
+
+        "followUpBasis": {
+          "const": "REQUIRES_RESPONSE_STATE_AND_FOLLOW_UP_POLICY"
+        },
+
+        "commercialStateInference": {
+          "const": "NONE"
+        }
+      }
+    }
+  }
+}

@@ -180,6 +180,24 @@ Aruba Mail Intelligence Automation
 - Invalid sequence objects are rejected.
 - Broken evidence links are rejected.
 - Foundation and Communication Cycle Detection regression gates remain green.
+- AZIONE 62 completed.
+- Response-State Evidence v1 contract implemented.
+- Generic Response-State Evidence builder implemented.
+- Generic Response-State Evidence validator implemented.
+- Sequence chronology is explicitly separated from response obligation.
+- Quectel observed response state is LATEST_OUTBOUND.
+- Quectel sequence evidence quality is COMPLETE_TIMESTAMP_ORDERING.
+- Response expectation evidence is not available in Sequence v1.
+- Response expectation remains UNDETERMINED without explicit evidence.
+- Unanswered determination remains UNDETERMINED without proven response expectation.
+- Follow-up determination remains UNDETERMINED pending response-state evidence and follow-up policy.
+- Direction alone does not create a response obligation.
+- Synthetic LATEST_INBOUND guardrail verified.
+- Response-State Evidence ID is deterministic.
+- Invalid Response-State objects are rejected.
+- Broken latest-evidence links are rejected.
+- Commercial state inference remains NONE.
+- Foundation, Detection and Sequence regression gates remain green.
 - Foundation regression remains green.
 
 ### EVIDENCE
@@ -334,9 +352,9 @@ None for Communication Intelligence Foundation v1.
 
 ## NEXT ACTION
 
-AZIONE 62 — Response-State Evidence v1: derive a conservative response-state candidate from the verified ordered sequence while keeping observed direction separate from any assertion that a reply is actually required.
+AZIONE 64 — Response Expectation Evidence v1: inspect verified normalized message content for explicit evidence that a reply, confirmation, availability, quotation or other response was requested or promised, while preserving exact MailEvidence linkage.
 
-Do not infer commercial status, CRM routing or automatic follow-up actions in AZIONE 62. Response obligation must remain evidence-based and distinct from merely observing that the latest message is OUTBOUND.
+Do not derive CRM routing, commercial status or automatic follow-up policy in AZIONE 64. The sole product is evidence for or against an actual response expectation.
 
 ## OPERATING RULE
 
