@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/collaborator-report-orchestration.schema.json",
+  "title": "Collaborator Report Orchestration Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "orchestrationVersion",
+    "orchestrationType",
+    "orchestrationId",
+    "reportId",
+    "orchestrationPolicy",
+    "generatedAt",
+    "reconciliation",
+    "reportInput",
+    "reportGeneration",
+    "mutationPolicy"
+  ],
+  "properties": {
+    "orchestrationVersion": {
+      "const": "1.0"
+    },
+    "orchestrationType": {
+      "const": "COLLABORATOR_REPORT_ORCHESTRATION_RESULT"
+    },
+    "orchestrationId": {
+      "type": "string",
+      "pattern": "^CRO-[a-f0-9]{64}$"
+    },
+    "reportId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "orchestrationPolicy": {
+      "const": "RECONCILIATION_BRIDGE_GENERATION_V1"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reconciliation": {
+      "$ref": "https://walltechgroup.eu/schemas/collaborator-reconciliation-result.schema.json"
+    },
+    "reportInput": {
+      "$ref": "https://walltechgroup.eu/schemas/collaborator-report-input.schema.json"
+    },
+    "reportGeneration": {
+      "$ref": "https://walltechgroup.eu/schemas/collaborator-report-generation.schema.json"
+    },
+    "mutationPolicy": {
+      "$ref": "#/$defs/mutationPolicy"
+    }
+  },
+  "$defs": {
+    "mutationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "crmWrite",
+        "opportunityCreation",
+        "stageMutation",
+        "ownerMutation",
+        "commercialStateMutation"
+      ],
+      "properties": {
+        "crmWrite": {
+          "const": false
+        },
+        "opportunityCreation": {
+          "const": false
+        },
+        "stageMutation": {
+          "const": false
+        },
+        "ownerMutation": {
+          "const": false
+        },
+        "commercialStateMutation": {
+          "const": false
+        }
+      }
+    }
+  }
+}
