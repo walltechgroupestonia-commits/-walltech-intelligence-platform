@@ -1,0 +1,29 @@
+[Unit]
+Description=Walltech Collaborator Automatic Mail Cycle
+Documentation=https://github.com/walltechgroupestonia-commits/-walltech-intelligence-platform
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=@@REPO_ROOT@@
+ExecStart=@@NODE_PATH@@ --env-file=@@REPO_ROOT@@/.env @@REPO_ROOT@@/src/reporting/run-collaborator-auto-cycle-production.js
+
+Environment=NODE_ENV=production
+
+UMask=0077
+TimeoutStartSec=120
+Restart=no
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectControlGroups=true
+ProtectKernelTunables=true
+RestrictSUIDSGID=true
+
+# Structured launcher exit codes:
+# 0  = NO_NEW / PROCESSED
+# 10 = BLOCKED / REVIEW_REQUIRED
+# 20 = another production launcher already owns the lock
+SuccessExitStatus=10 20
