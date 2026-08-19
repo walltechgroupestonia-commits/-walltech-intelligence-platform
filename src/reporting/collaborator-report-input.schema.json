@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/collaborator-report-input.schema.json",
+  "title": "Collaborator Report Input v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["inputVersion", "reportId", "events"],
+  "properties": {
+    "inputVersion": {
+      "const": "1.0"
+    },
+    "reportId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    }
+  },
+  "$defs": {
+    "nullableId": {
+      "type": ["string", "null"]
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eventId",
+        "collaboratorId",
+        "collaboratorName",
+        "occurredAt",
+        "channel",
+        "eventType",
+        "direction",
+        "sourceProvenance",
+        "evidenceRef",
+        "reconciliationOutcome"
+      ],
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collaboratorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collaboratorName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "channel": {
+          "enum": [
+            "EMAIL",
+            "WHATSAPP",
+            "PHONE",
+            "MEETING",
+            "WETRANSFER",
+            "DOCUMENT",
+            "OTHER_OPERATIONAL"
+          ]
+        },
+        "eventType": {
+          "enum": [
+            "COMMUNICATION",
+            "RESPONSE",
+            "PHONE_NOTE",
+            "MEETING",
+            "DOCUMENT_SENT",
+            "DOCUMENT_RECEIVED",
+            "FILE_TRANSFER",
+            "FOLLOW_UP"
+          ]
+        },
+        "direction": {
+          "enum": ["INBOUND", "OUTBOUND", "INTERNAL", "UNKNOWN"]
+        },
+        "sourceProvenance": {
+          "enum": [
+            "DIRECT",
+            "FORWARDED",
+            "USER_REPORTED",
+            "SYSTEM_EVIDENCE"
+          ]
+        },
+        "evidenceRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reconciliationOutcome": {
+          "enum": [
+            "EXACT_DUPLICATE",
+            "LINK_EXISTING",
+            "POSSIBLE_MATCH",
+            "NEW_CANDIDATE",
+            "DISCARD"
+          ]
+        },
+        "opportunityId": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "candidateOpportunityId": {
+          "$ref": "#/$defs/nullableId"
+        }
+      }
+    }
+  }
+}

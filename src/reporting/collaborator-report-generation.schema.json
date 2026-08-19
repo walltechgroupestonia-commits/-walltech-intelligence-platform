@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/collaborator-report-generation.schema.json",
+  "title": "Collaborator Report Generation Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "generationVersion",
+    "generationType",
+    "generationId",
+    "reportId",
+    "decisionPolicy",
+    "generatedAt",
+    "rows",
+    "decisions",
+    "counts",
+    "mutationPolicy"
+  ],
+  "properties": {
+    "generationVersion": {
+      "const": "1.0"
+    },
+    "generationType": {
+      "const": "COLLABORATOR_REPORT_GENERATION"
+    },
+    "generationId": {
+      "type": "string",
+      "pattern": "^CGR-[a-f0-9]{64}$"
+    },
+    "reportId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decisionPolicy": {
+      "const": "RECONCILIATION_BOUND_NON_MUTATING_V1"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/reportRow"
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/decision"
+      }
+    },
+    "counts": {
+      "$ref": "#/$defs/counts"
+    },
+    "mutationPolicy": {
+      "$ref": "#/$defs/mutationPolicy"
+    }
+  },
+  "$defs": {
+    "nullableId": {
+      "type": ["string", "null"]
+    },
+
+    "reportRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rowId",
+        "eventId",
+        "collaboratorId",
+        "collaboratorName",
+        "occurredAt",
+        "channel",
+        "eventType",
+        "direction",
+        "sourceProvenance",
+        "evidenceRef",
+        "reconciliationOutcome",
+        "opportunityId",
+        "candidateOpportunityId",
+        "reportStatus"
+      ],
+      "properties": {
+        "rowId": {
+          "type": "string",
+          "pattern": "^CRR-[a-f0-9]{64}$"
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collaboratorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collaboratorName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "channel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eventType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "direction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceProvenance": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reconciliationOutcome": {
+          "enum": [
+            "LINK_EXISTING",
+            "POSSIBLE_MATCH",
+            "NEW_CANDIDATE"
+          ]
+        },
+        "opportunityId": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "candidateOpportunityId": {
+          "$ref": "#/$defs/nullableId"
+        },
+        "reportStatus": {
+          "enum": [
+            "CONFIRMED",
+            "MISSING_PROOF",
+            "UNLINKED"
+          ]
+        }
+      }
+    },
+
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eventId",
+        "decision",
+        "reasonCode",
+        "reportStatus",
+        "row"
+      ],
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision": {
+          "enum": [
+            "INCLUDE",
+            "EXCLUDE"
+          ]
+        },
+        "reasonCode": {
+          "enum": [
+            "LINK_EXISTING_CONFIRMED",
+            "POSSIBLE_MATCH_REQUIRES_PROOF",
+            "NEW_CANDIDATE_UNLINKED",
+            "EXACT_DUPLICATE_AUDIT_ONLY",
+            "DISCARD_EXCLUDED"
+          ]
+        },
+        "reportStatus": {
+          "enum": [
+            "CONFIRMED",
+            "MISSING_PROOF",
+            "UNLINKED",
+            "AUDIT_ONLY",
+            "DISCARDED"
+          ]
+        },
+        "row": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/reportRow"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputEvents",
+        "includedRows",
+        "excludedEvents",
+        "confirmedRows",
+        "missingProofRows",
+        "unlinkedRows"
+      ],
+      "properties": {
+        "inputEvents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "includedRows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excludedEvents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "confirmedRows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "missingProofRows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unlinkedRows": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+
+    "mutationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "crmWrite",
+        "opportunityCreation",
+        "stageMutation",
+        "ownerMutation",
+        "commercialStateMutation"
+      ],
+      "properties": {
+        "crmWrite": {
+          "const": false
+        },
+        "opportunityCreation": {
+          "const": false
+        },
+        "stageMutation": {
+          "const": false
+        },
+        "ownerMutation": {
+          "const": false
+        },
+        "commercialStateMutation": {
+          "const": false
+        }
+      }
+    }
+  }
+}
