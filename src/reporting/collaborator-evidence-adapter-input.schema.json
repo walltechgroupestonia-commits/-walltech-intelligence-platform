@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/collaborator-evidence-adapter-input.schema.json",
+  "title": "Collaborator Evidence Adapter Input v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "adapterVersion",
+    "adapterType",
+    "adapterPolicy",
+    "reportId",
+    "mailEvidence",
+    "communicationDetection",
+    "collaboratorDirectory",
+    "knownEvidence",
+    "authoritativeBindings",
+    "opportunityHints"
+  ],
+  "properties": {
+    "adapterVersion": {
+      "const": "1.0"
+    },
+    "adapterType": {
+      "const": "MAIL_EVIDENCE_TO_COLLABORATOR_RECONCILIATION_INPUT"
+    },
+    "adapterPolicy": {
+      "const": "EXACT_IDENTITY_FAIL_CLOSED_NO_BUSINESS_INFERENCE_V1"
+    },
+    "reportId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mailEvidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "https://walltechgroup.eu/schemas/mail-evidence.schema.json"
+      }
+    },
+    "communicationDetection": {
+      "$ref": "https://walltechgroup.eu/schemas/communication-cycle-detection.schema.json"
+    },
+    "collaboratorDirectory": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/collaboratorIdentity"
+      }
+    },
+    "knownEvidence": {
+      "type": "array",
+      "items": {
+        "$ref": "https://walltechgroup.eu/schemas/collaborator-reconciliation-input.schema.json#/$defs/knownEvidence"
+      }
+    },
+    "authoritativeBindings": {
+      "type": "array",
+      "items": {
+        "$ref": "https://walltechgroup.eu/schemas/collaborator-reconciliation-input.schema.json#/$defs/authoritativeBinding"
+      }
+    },
+    "opportunityHints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/opportunityHint"
+      }
+    }
+  },
+  "$defs": {
+    "evidenceId": {
+      "type": "string",
+      "pattern": "^ME-[a-f0-9]{64}$"
+    },
+    "candidateRelationshipId": {
+      "type": "string",
+      "pattern": "^CCR-[a-f0-9]{64}$"
+    },
+    "collaboratorIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collaboratorId",
+        "collaboratorName",
+        "emailAddresses",
+        "identitySource"
+      ],
+      "properties": {
+        "collaboratorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collaboratorName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "emailAddresses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "identitySource": {
+          "const": "USER_CONFIRMED_DIRECTORY"
+        }
+      }
+    },
+    "opportunityHint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "opportunityId",
+        "matchBasis"
+      ],
+      "properties": {
+        "evidenceId": {
+          "$ref": "#/$defs/evidenceId"
+        },
+        "candidateRelationshipId": {
+          "$ref": "#/$defs/candidateRelationshipId"
+        },
+        "opportunityId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "matchBasis": {
+          "enum": [
+            "CONTACT_MATCH",
+            "MAILBOX_SUBJECT_RELATIONSHIP",
+            "CANDIDATE_RELATIONSHIP_ID",
+            "USER_HINT",
+            "OTHER_NON_AUTHORITATIVE"
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "evidenceId"
+          ],
+          "properties": {
+            "evidenceId": true,
+            "candidateRelationshipId": false
+          }
+        },
+        {
+          "required": [
+            "candidateRelationshipId"
+          ],
+          "properties": {
+            "candidateRelationshipId": true,
+            "evidenceId": false
+          }
+        }
+      ]
+    }
+  }
+}
