@@ -354,14 +354,79 @@ function resolveCollaborator(
   evidence,
   emailToCollaborator,
 ) {
+  const direction =
+    detectDirection(
+      evidence,
+    );
+
+  const own =
+    normalizeEmail(
+      evidence.source.mailboxUser,
+    );
+
+  let candidateAddresses;
+
+  /*
+   * Identity attribution is directional.
+   *
+   * INBOUND:
+   *   the operational collaborator is the sender.
+   *   CC / To / Reply-To must not create false ambiguity.
+   *
+   * OUTBOUND:
+   *   the operational collaborator is resolved from external
+   *   recipients. Multiple known recipients remain ambiguous
+   *   and fail closed because the current event contract
+   *   permits exactly one collaborator per evidence item.
+   */
+  if (
+    direction === "INBOUND"
+  ) {
+    candidateAddresses =
+      uniqueSorted(
+        addressListEmails(
+          evidence.participants?.from,
+        ).filter(
+          address =>
+            address !== own,
+        ),
+      );
+  } else if (
+    direction === "OUTBOUND"
+  ) {
+    candidateAddresses =
+      uniqueSorted(
+        [
+          ...addressListEmails(
+            evidence.participants?.to,
+          ),
+
+          ...addressListEmails(
+            evidence.participants?.cc,
+          ),
+        ].filter(
+          address =>
+            address !== own,
+        ),
+      );
+  } else if (
+    direction === "SELF"
+  ) {
+    throw new Error(
+      `COLLABORATOR UNRESOLVED FOR SELF EVIDENCE: ${evidence.evidenceId}`,
+    );
+  } else {
+    throw new Error(
+      `COLLABORATOR DIRECTION AMBIGUOUS FOR EVIDENCE: ${evidence.evidenceId}`,
+    );
+  }
+
   const matchedCollaborators =
     new Map();
 
   for (
     const address
-    of externalAddressesFromEvidence(
-      evidence,
-    )
+    of candidateAddresses
   ) {
     const collaborator =
       emailToCollaborator.get(
