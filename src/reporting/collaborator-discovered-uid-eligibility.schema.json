@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/collaborator-discovered-uid-eligibility.schema.json",
+  "title": "Collaborator Discovered UID Eligibility v1",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "classificationVersion",
+    "classificationType",
+    "classificationPolicy",
+    "accountLookup",
+    "mailboxPath",
+    "sourceDiscoveryAt",
+    "eligibleUids",
+    "eligibleItems",
+    "nonEligibleItems",
+    "counts",
+    "cursorMutation",
+    "mailboxMutation",
+    "businessInference",
+    "classifiedAt"
+  ],
+
+  "properties": {
+    "classificationVersion": {
+      "const": "1.0"
+    },
+
+    "classificationType": {
+      "const": "COLLABORATOR_DISCOVERED_UID_ELIGIBILITY"
+    },
+
+    "classificationPolicy": {
+      "const": "CONFIRMED_DIRECTORY_DIRECTIONAL_NO_BUSINESS_INFERENCE_V1"
+    },
+
+    "accountLookup": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "mailboxPath": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "sourceDiscoveryAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "eligibleUids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+
+    "eligibleItems": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/eligibleItem"
+      }
+    },
+
+    "nonEligibleItems": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEligibleItem"
+      }
+    },
+
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "discovered",
+        "eligible",
+        "nonEligible"
+      ],
+      "properties": {
+        "discovered": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "eligible": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "nonEligible": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+
+    "cursorMutation": {
+      "const": false
+    },
+
+    "mailboxMutation": {
+      "const": false
+    },
+
+    "businessInference": {
+      "const": false
+    },
+
+    "classifiedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+
+  "$defs": {
+    "eligibleItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uid",
+        "evidenceId",
+        "collaboratorId",
+        "collaboratorName",
+        "disposition"
+      ],
+      "properties": {
+        "uid": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "evidenceId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collaboratorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "collaboratorName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "disposition": {
+          "const": "ELIGIBLE"
+        }
+      }
+    },
+
+    "nonEligibleItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uid",
+        "evidenceId",
+        "disposition"
+      ],
+      "properties": {
+        "uid": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "evidenceId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "disposition": {
+          "enum": [
+            "NOT_IN_CONFIRMED_DIRECTORY",
+            "NOT_COLLABORATOR_SELF",
+            "REVIEW_REQUIRED_AMBIGUOUS",
+            "REVIEW_REQUIRED_DIRECTION_AMBIGUOUS"
+          ]
+        }
+      }
+    }
+  }
+}

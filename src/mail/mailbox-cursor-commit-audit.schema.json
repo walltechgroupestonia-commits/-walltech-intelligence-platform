@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/mailbox-cursor-commit-audit.schema.json",
+  "title": "Mailbox Cursor Commit Audit v1",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "auditVersion",
+    "auditType",
+    "auditPolicy",
+    "commitId",
+    "status",
+    "accountLookup",
+    "mailboxPath",
+    "uidValidity",
+    "currentBoundaryUid",
+    "targetBoundaryUid",
+    "cursorPath",
+    "beforeCursorSha256",
+    "intendedAfterCursorSha256",
+    "proposalSha256",
+    "preparedAt",
+    "finishedAt",
+    "error"
+  ],
+
+  "properties": {
+    "auditVersion": {
+      "const": "1.0"
+    },
+
+    "auditType": {
+      "const": "MAILBOX_CURSOR_COMMIT_AUDIT"
+    },
+
+    "auditPolicy": {
+      "const": "AUDIT_PREPARED_BEFORE_ATOMIC_CURSOR_REPLACE_V1"
+    },
+
+    "commitId": {
+      "type": "string",
+      "pattern": "^MCCC-[0-9a-fA-F-]+$"
+    },
+
+    "status": {
+      "enum": [
+        "PREPARED",
+        "COMMITTED",
+        "ABORTED"
+      ]
+    },
+
+    "accountLookup": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "mailboxPath": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "uidValidity": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+
+    "currentBoundaryUid": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "targetBoundaryUid": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "cursorPath": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "beforeCursorSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+
+    "intendedAfterCursorSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+
+    "proposalSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+
+    "preparedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "finishedAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/collaborator-eligible-processing-receipt.schema.json",
+  "title": "Collaborator Eligible Processing Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "receiptVersion",
+    "receiptType",
+    "receiptPolicy",
+    "accountLookup",
+    "mailboxPath",
+    "sourceDiscoveryAt",
+    "eligibleUids",
+    "successfulUids",
+    "failedUids",
+    "status",
+    "reportId",
+    "cursorMutation",
+    "completedAt"
+  ],
+
+  "properties": {
+    "receiptVersion": {
+      "const": "1.0"
+    },
+
+    "receiptType": {
+      "const": "COLLABORATOR_ELIGIBLE_PROCESSING_RECEIPT"
+    },
+
+    "receiptPolicy": {
+      "const": "EXPLICIT_PROCESSING_OUTCOME_NO_CURSOR_MUTATION_V1"
+    },
+
+    "accountLookup": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "mailboxPath": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "sourceDiscoveryAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "eligibleUids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+
+    "successfulUids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+
+    "failedUids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+
+    "status": {
+      "enum": [
+        "NOT_REQUIRED",
+        "SUCCESS",
+        "PARTIAL_FAILURE",
+        "FAILED"
+      ]
+    },
+
+    "reportId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+
+    "cursorMutation": {
+      "const": false
+    },
+
+    "completedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

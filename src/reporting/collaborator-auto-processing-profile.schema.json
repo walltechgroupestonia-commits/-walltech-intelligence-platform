@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/collaborator-auto-processing-profile.schema.json",
+  "title": "Collaborator Automatic Processing Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "profileVersion",
+    "profileType",
+    "profilePolicy",
+    "profileId",
+    "reportIdPrefix",
+    "accountLookup",
+    "mailboxPath",
+    "collaboratorDirectory",
+    "knownEvidence"
+  ],
+
+  "properties": {
+    "profileVersion": {
+      "const": "1.0"
+    },
+
+    "profileType": {
+      "const": "COLLABORATOR_AUTO_PROCESSING_PROFILE"
+    },
+
+    "profilePolicy": {
+      "const": "CONFIRMED_DIRECTORY_NO_AUTOMATIC_BUSINESS_BINDING_V1"
+    },
+
+    "profileId": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "reportIdPrefix": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "accountLookup": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "mailboxPath": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "collaboratorDirectory": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "https://walltechgroup.eu/schemas/collaborator-evidence-adapter-input.schema.json#/$defs/collaboratorIdentity"
+      }
+    },
+
+    "knownEvidence": {
+      "type": "array",
+      "items": {
+        "$ref": "https://walltechgroup.eu/schemas/collaborator-reconciliation-input.schema.json#/$defs/knownEvidence"
+      }
+    }
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/mailbox-cursor-advance-proposal.schema.json",
+  "title": "Mailbox Cursor Advance Proposal v1",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "proposalVersion",
+    "proposalType",
+    "proposalPolicy",
+    "accountLookup",
+    "mailboxPath",
+    "uidValidity",
+    "currentBoundaryUid",
+    "currentBoundaryKind",
+    "observedUidNext",
+    "observedHighestModseq",
+    "snapshotUpperUid",
+    "successfulEligibleUids",
+    "terminalNonEligibleUids",
+    "blockingItems",
+    "targetBoundaryUid",
+    "targetBoundaryKind",
+    "decision",
+    "reason",
+    "cursorMutation",
+    "builtAt"
+  ],
+
+  "properties": {
+    "proposalVersion": {
+      "const": "1.0"
+    },
+
+    "proposalType": {
+      "const": "MAILBOX_CURSOR_ADVANCE_PROPOSAL"
+    },
+
+    "proposalPolicy": {
+      "const": "CONTIGUOUS_HANDLED_SNAPSHOT_FAIL_CLOSED_V1"
+    },
+
+    "accountLookup": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "mailboxPath": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "uidValidity": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+
+    "currentBoundaryUid": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "currentBoundaryKind": {
+      "enum": [
+        "CURRENT_MAILBOX_HEAD_BASELINE",
+        "PROCESSED_SUCCESS"
+      ]
+    },
+
+    "observedUidNext": {
+      "type": "integer",
+      "minimum": 1
+    },
+
+    "observedHighestModseq": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+
+    "snapshotUpperUid": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "successfulEligibleUids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+
+    "terminalNonEligibleUids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+
+    "blockingItems": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/blockingItem"
+      }
+    },
+
+    "targetBoundaryUid": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "targetBoundaryKind": {
+      "enum": [
+        "CURRENT_MAILBOX_HEAD_BASELINE",
+        "PROCESSED_SUCCESS"
+      ]
+    },
+
+    "decision": {
+      "enum": [
+        "ADVANCE_ALLOWED",
+        "NO_ADVANCE"
+      ]
+    },
+
+    "reason": {
+      "enum": [
+        "SNAPSHOT_FULLY_HANDLED",
+        "ADVANCE_TO_BEFORE_BLOCKER",
+        "BLOCKED_AT_NEXT_UID",
+        "NO_NEW_UID_SPACE"
+      ]
+    },
+
+    "cursorMutation": {
+      "const": false
+    },
+
+    "builtAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+
+  "$defs": {
+    "blockingItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uid",
+        "reason"
+      ],
+      "properties": {
+        "uid": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reason": {
+          "enum": [
+            "ELIGIBLE_PROCESSING_FAILED",
+            "REVIEW_REQUIRED_AMBIGUOUS",
+            "REVIEW_REQUIRED_DIRECTION_AMBIGUOUS"
+          ]
+        }
+      }
+    }
+  }
+}

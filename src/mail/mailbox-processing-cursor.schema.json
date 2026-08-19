@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/mailbox-processing-cursor.schema.json",
+  "title": "Mailbox Processing Cursor v1",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "cursorVersion",
+    "cursorType",
+    "cursorPolicy",
+    "accountLookup",
+    "mailboxPath",
+    "uidValidity",
+    "boundaryUid",
+    "boundaryKind",
+    "lastObservedUidNext",
+    "lastObservedHighestModseq",
+    "establishedAt",
+    "updatedAt"
+  ],
+
+  "properties": {
+    "cursorVersion": {
+      "const": "1.0"
+    },
+
+    "cursorType": {
+      "const": "MAILBOX_PROCESSING_CURSOR"
+    },
+
+    "cursorPolicy": {
+      "const": "UIDVALIDITY_GUARDED_MONOTONIC_UID_V1"
+    },
+
+    "accountLookup": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "mailboxPath": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "uidValidity": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+
+    "boundaryUid": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "boundaryKind": {
+      "enum": [
+        "CURRENT_MAILBOX_HEAD_BASELINE",
+        "PROCESSED_SUCCESS"
+      ]
+    },
+
+    "lastObservedUidNext": {
+      "type": "integer",
+      "minimum": 1
+    },
+
+    "lastObservedHighestModseq": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+
+    "establishedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

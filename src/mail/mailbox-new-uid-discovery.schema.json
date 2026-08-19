@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/mailbox-new-uid-discovery.schema.json",
+  "title": "Mailbox New UID Discovery Result v1",
+  "type": "object",
+  "additionalProperties": false,
+
+  "required": [
+    "discoveryVersion",
+    "discoveryType",
+    "discoveryPolicy",
+    "accountLookup",
+    "mailboxPath",
+    "cursorUidValidity",
+    "cursorBoundaryUid",
+    "observedUidValidity",
+    "observedUidNext",
+    "observedHighestModseq",
+    "observedExists",
+    "searchRange",
+    "newUids",
+    "newUidCount",
+    "status",
+    "cursorMutation",
+    "mailboxMutation",
+    "discoveredAt"
+  ],
+
+  "properties": {
+    "discoveryVersion": {
+      "const": "1.0"
+    },
+
+    "discoveryType": {
+      "const": "MAILBOX_NEW_UID_DISCOVERY"
+    },
+
+    "discoveryPolicy": {
+      "const": "READ_ONLY_UIDVALIDITY_GUARDED_NO_CURSOR_MUTATION_V1"
+    },
+
+    "accountLookup": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "mailboxPath": {
+      "type": "string",
+      "minLength": 1
+    },
+
+    "cursorUidValidity": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+
+    "cursorBoundaryUid": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "observedUidValidity": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+
+    "observedUidNext": {
+      "type": "integer",
+      "minimum": 1
+    },
+
+    "observedHighestModseq": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+
+    "observedExists": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "searchRange": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+
+    "newUids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+
+    "newUidCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+
+    "status": {
+      "enum": [
+        "NO_NEW_MESSAGES",
+        "NEW_UIDS_AVAILABLE"
+      ]
+    },
+
+    "cursorMutation": {
+      "const": false
+    },
+
+    "mailboxMutation": {
+      "const": false
+    },
+
+    "discoveredAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
