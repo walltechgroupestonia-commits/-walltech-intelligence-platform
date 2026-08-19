@@ -64,30 +64,120 @@ function semanticGuard(input) {
 
     eventIds.add(event.eventId);
 
+    const candidateOpportunityIds =
+      [
+        ...new Set(
+          event.candidateOpportunityIds || [],
+        ),
+      ].sort();
+
+    const candidateOpportunityId =
+      event.candidateOpportunityId || null;
+
+    /*
+     * Backward-compatible candidate representation:
+     *
+     * - singular candidateOpportunityId remains supported;
+     * - candidateOpportunityIds carries the complete candidate set;
+     * - an ambiguous multi-candidate match must keep the singular
+     *   field null;
+     * - singular + array may coexist only when they describe the
+     *   same single candidate.
+     */
     if (
-      event.reconciliationOutcome === "LINK_EXISTING" &&
-      !event.opportunityId
+      candidateOpportunityId &&
+      candidateOpportunityIds.length > 0 &&
+      !candidateOpportunityIds.includes(
+        candidateOpportunityId,
+      )
     ) {
       throw new Error(
-        `LINK_EXISTING REQUIRES opportunityId: ${event.eventId}`,
+        `CANDIDATE OPPORTUNITY REPRESENTATION CONFLICT: ${event.eventId}`,
       );
     }
 
     if (
-      event.reconciliationOutcome === "POSSIBLE_MATCH" &&
-      event.opportunityId
+      candidateOpportunityIds.length > 1 &&
+      candidateOpportunityId
     ) {
       throw new Error(
-        `POSSIBLE_MATCH CANNOT CONFIRM opportunityId: ${event.eventId}`,
+        `AMBIGUOUS MULTI-CANDIDATE MUST HAVE null candidateOpportunityId: ${event.eventId}`,
       );
     }
 
+    const effectiveCandidateIds =
+      candidateOpportunityIds.length > 0
+        ? candidateOpportunityIds
+        : candidateOpportunityId
+          ? [candidateOpportunityId]
+          : [];
+
     if (
-      event.reconciliationOutcome === "NEW_CANDIDATE" &&
-      event.opportunityId
+      event.reconciliationOutcome === "LINK_EXISTING"
+    ) {
+      if (!event.opportunityId) {
+        throw new Error(
+          `LINK_EXISTING REQUIRES opportunityId: ${event.eventId}`,
+        );
+      }
+
+      if (
+        effectiveCandidateIds.length > 0
+      ) {
+        throw new Error(
+          `LINK_EXISTING CANNOT CARRY CANDIDATE OPPORTUNITIES: ${event.eventId}`,
+        );
+      }
+    }
+
+    if (
+      event.reconciliationOutcome === "POSSIBLE_MATCH"
+    ) {
+      if (event.opportunityId) {
+        throw new Error(
+          `POSSIBLE_MATCH CANNOT CONFIRM opportunityId: ${event.eventId}`,
+        );
+      }
+
+      if (
+        effectiveCandidateIds.length < 1
+      ) {
+        throw new Error(
+          `POSSIBLE_MATCH REQUIRES candidate opportunity evidence: ${event.eventId}`,
+        );
+      }
+    }
+
+    if (
+      event.reconciliationOutcome === "NEW_CANDIDATE"
+    ) {
+      if (event.opportunityId) {
+        throw new Error(
+          `NEW_CANDIDATE CANNOT HAVE opportunityId: ${event.eventId}`,
+        );
+      }
+
+      if (
+        effectiveCandidateIds.length > 0
+      ) {
+        throw new Error(
+          `NEW_CANDIDATE CANNOT HAVE CANDIDATE OPPORTUNITY REFERENCES: ${event.eventId}`,
+        );
+      }
+    }
+
+    if (
+      (
+        event.reconciliationOutcome === "EXACT_DUPLICATE" ||
+        event.reconciliationOutcome === "DISCARD"
+      ) &&
+      (
+        event.opportunityId ||
+        effectiveCandidateIds.length > 0
+      )
     ) {
       throw new Error(
-        `NEW_CANDIDATE CANNOT HAVE opportunityId: ${event.eventId}`,
+        `${event.reconciliationOutcome} CANNOT CARRY OPPORTUNITY REFERENCES: ${event.eventId}`,
       );
     }
   }
@@ -109,6 +199,13 @@ function buildRow(reportId, event, reportStatus) {
     event.reconciliationOutcome,
     event.opportunityId || "NONE",
     event.candidateOpportunityId || "NONE",
+    JSON.stringify(
+      [
+        ...new Set(
+          event.candidateOpportunityIds || [],
+        ),
+      ].sort(),
+    ),
     reportStatus,
   ].join("\n");
 
@@ -129,6 +226,16 @@ function buildRow(reportId, event, reportStatus) {
       event.opportunityId || null,
     candidateOpportunityId:
       event.candidateOpportunityId || null,
+    candidateOpportunityIds:
+      [
+        ...new Set(
+          event.candidateOpportunityIds || (
+            event.candidateOpportunityId
+              ? [event.candidateOpportunityId]
+              : []
+          ),
+        ),
+      ].sort(),
     reportStatus,
   };
 }

@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/collaborator-reconciliation-result.schema.json",
+  "title": "Collaborator Event Reconciliation Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "reconciliationVersion",
+    "reconciliationType",
+    "reconciliationId",
+    "reportId",
+    "decisionPolicy",
+    "generatedAt",
+    "decisions",
+    "counts",
+    "mutationPolicy"
+  ],
+  "properties": {
+    "reconciliationVersion": {
+      "const": "1.0"
+    },
+    "reconciliationType": {
+      "const": "COLLABORATOR_EVENT_RECONCILIATION_RESULT"
+    },
+    "reconciliationId": {
+      "type": "string",
+      "pattern": "^CER-[a-f0-9]{64}$"
+    },
+    "reportId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decisionPolicy": {
+      "const": "DETERMINISTIC_EVIDENCE_BOUND_RECONCILIATION_V1"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/decision"
+      }
+    },
+    "counts": {
+      "$ref": "#/$defs/counts"
+    },
+    "mutationPolicy": {
+      "$ref": "#/$defs/mutationPolicy"
+    }
+  },
+  "$defs": {
+    "nullableString": {
+      "type": ["string", "null"]
+    },
+
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decisionId",
+        "eventId",
+        "evidenceRef",
+        "reconciliationOutcome",
+        "reasonCode",
+        "opportunityId",
+        "candidateOpportunityIds",
+        "duplicateEvidenceRef",
+        "duplicateBasis"
+      ],
+      "properties": {
+        "decisionId": {
+          "type": "string",
+          "pattern": "^CED-[a-f0-9]{64}$"
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reconciliationOutcome": {
+          "enum": [
+            "EXACT_DUPLICATE",
+            "LINK_EXISTING",
+            "POSSIBLE_MATCH",
+            "NEW_CANDIDATE",
+            "DISCARD"
+          ]
+        },
+        "reasonCode": {
+          "enum": [
+            "NON_OPERATIONAL_EVENT",
+            "KNOWN_EVIDENCE_REF_MATCH",
+            "KNOWN_SOURCE_SHA256_MATCH",
+            "AUTHORITATIVE_BINDING",
+            "NON_AUTHORITATIVE_CANDIDATE_MATCH",
+            "NO_EXISTING_MATCH"
+          ]
+        },
+        "opportunityId": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "candidateOpportunityIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "duplicateEvidenceRef": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "duplicateBasis": {
+          "enum": [
+            "EVIDENCE_REF",
+            "SOURCE_SHA256",
+            "NONE"
+          ]
+        }
+      }
+    },
+
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputEvents",
+        "exactDuplicates",
+        "linkedExisting",
+        "possibleMatches",
+        "newCandidates",
+        "discarded"
+      ],
+      "properties": {
+        "inputEvents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exactDuplicates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "linkedExisting": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "possibleMatches": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "newCandidates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "discarded": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+
+    "mutationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "crmWrite",
+        "opportunityCreation",
+        "stageMutation",
+        "ownerMutation",
+        "commercialStateMutation"
+      ],
+      "properties": {
+        "crmWrite": {
+          "const": false
+        },
+        "opportunityCreation": {
+          "const": false
+        },
+        "stageMutation": {
+          "const": false
+        },
+        "ownerMutation": {
+          "const": false
+        },
+        "commercialStateMutation": {
+          "const": false
+        }
+      }
+    }
+  }
+}

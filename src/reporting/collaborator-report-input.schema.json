@@ -4,7 +4,11 @@
   "title": "Collaborator Report Input v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["inputVersion", "reportId", "events"],
+  "required": [
+    "inputVersion",
+    "reportId",
+    "events"
+  ],
   "properties": {
     "inputVersion": {
       "const": "1.0"
@@ -23,7 +27,10 @@
   },
   "$defs": {
     "nullableId": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "event": {
       "type": "object",
@@ -81,7 +88,12 @@
           ]
         },
         "direction": {
-          "enum": ["INBOUND", "OUTBOUND", "INTERNAL", "UNKNOWN"]
+          "enum": [
+            "INBOUND",
+            "OUTBOUND",
+            "INTERNAL",
+            "UNKNOWN"
+          ]
         },
         "sourceProvenance": {
           "enum": [
@@ -109,6 +121,14 @@
         },
         "candidateOpportunityId": {
           "$ref": "#/$defs/nullableId"
+        },
+        "candidateOpportunityIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     }

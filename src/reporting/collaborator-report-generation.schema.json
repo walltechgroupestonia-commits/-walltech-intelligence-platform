@@ -59,9 +59,11 @@
   },
   "$defs": {
     "nullableId": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
-
     "reportRow": {
       "type": "object",
       "additionalProperties": false,
@@ -79,6 +81,7 @@
         "reconciliationOutcome",
         "opportunityId",
         "candidateOpportunityId",
+        "candidateOpportunityIds",
         "reportStatus"
       ],
       "properties": {
@@ -141,10 +144,17 @@
             "MISSING_PROOF",
             "UNLINKED"
           ]
+        },
+        "candidateOpportunityIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
-
     "decision": {
       "type": "object",
       "additionalProperties": false,
@@ -196,7 +206,6 @@
         }
       }
     },
-
     "counts": {
       "type": "object",
       "additionalProperties": false,
@@ -235,7 +244,6 @@
         }
       }
     },
-
     "mutationPolicy": {
       "type": "object",
       "additionalProperties": false,
