@@ -119,6 +119,90 @@ function clean(value) {
     null;
 }
 
+function assignmentIdFromTicket(
+  ticket
+) {
+  const subject =
+    clean(
+      ticket
+        ?.properties
+        ?.subject
+    );
+
+  invariant(
+    subject,
+    "TICKET SUBJECT REQUIRED"
+  );
+
+  const match =
+    subject.match(
+      /^\[(CA-[A-Za-z0-9-]+)\]/
+    );
+
+  invariant(
+    match,
+    "TICKET ASSIGNMENT ID REQUIRED IN SUBJECT"
+  );
+
+  return match[1];
+}
+
+
+function pendingAssignmentForTicket(
+  queue,
+  ticket
+) {
+  invariant(
+    queue
+      ?.queueType ===
+      "WALLTECH_CYCLE_ASSIGNMENT_QUEUE",
+    "QUEUE INVALID"
+  );
+
+  invariant(
+    Array.isArray(
+      queue.items
+    ),
+    "QUEUE ITEMS INVALID"
+  );
+
+  const assignmentId =
+    assignmentIdFromTicket(
+      ticket
+    );
+
+  const matches =
+    queue.items.filter(
+      item =>
+        item
+          ?.assignment
+          ?.assignmentId ===
+        assignmentId
+    );
+
+  invariant(
+    matches.length === 1,
+    matches.length === 0
+      ? "TICKET ASSIGNMENT NOT FOUND IN QUEUE"
+      : "DUPLICATE ASSIGNMENT ID IN QUEUE"
+  );
+
+  const pending =
+    matches[0];
+
+  invariant(
+    pending
+      .assignment
+      .maxDecision
+      .state ===
+      "PENDING_MAX",
+    "TICKET ASSIGNMENT NOT PENDING_MAX"
+  );
+
+  return pending;
+}
+
+
 function buildDecisionReturn(
   queueItem,
   ticket
@@ -135,6 +219,19 @@ function buildDecisionReturn(
   const p =
     ticket.properties ||
     {};
+
+  const ticketAssignmentId =
+    assignmentIdFromTicket(
+      ticket
+    );
+
+  invariant(
+    ticketAssignmentId ===
+      queueItem
+        .assignment
+        .assignmentId,
+    "TICKET ASSIGNMENT MISMATCH"
+  );
 
   invariant(
     p.hs_pipeline ===
@@ -404,6 +501,7 @@ async function fetchTicket(
   ticketId
 ) {
   const properties = [
+    "subject",
     "hs_pipeline",
     "hs_pipeline_stage",
     "walltech_participation_status",
@@ -661,25 +759,15 @@ async function main() {
         queuePath
       );
 
-    const pending =
-      queue.items.find(
-        item =>
-          item.assignment
-            .maxDecision
-            .state ===
-          "PENDING_MAX" &&
-          item.assignment
-            .assignmentId
-      );
-
-    invariant(
-      pending,
-      "NO PENDING ASSIGNMENT FOUND"
-    );
-
     const ticket =
       await fetchTicket(
         ticketId
+      );
+
+    const pending =
+      pendingAssignmentForTicket(
+        queue,
+        ticket
       );
 
     const result =
@@ -745,4 +833,6 @@ module.exports = {
   buildDecisionReturn,
   applyToQueue,
   parseIdList,
+  assignmentIdFromTicket,
+  pendingAssignmentForTicket,
 };
