@@ -13,10 +13,18 @@
     "nextAction"
   ],
   "properties": {
-    "dealId": { "type": "string" },
-    "dealName": { "type": "string" },
-    "source": { "type": "string" },
-    "mailbox": { "type": "string" },
+    "dealId": {
+      "type": "string"
+    },
+    "dealName": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "mailbox": {
+      "type": "string"
+    },
     "status": {
       "type": "string",
       "enum": [
@@ -38,20 +46,33 @@
     },
     "priority": {
       "type": "string",
-      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ]
     },
     "primaryContact": {
       "type": "object"
     },
     "otherContacts": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "commercialValue": {
-      "type": ["number", "null"]
+      "type": [
+        "number",
+        "null"
+      ]
     },
     "feeValue": {
-      "type": ["number", "null"]
+      "type": [
+        "number",
+        "null"
+      ]
     },
     "revenueStatus": {
       "type": "string"
@@ -60,7 +81,10 @@
       "type": "string"
     },
     "lastCounterpartyResponseDate": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "format": "date"
     },
     "walltechFollowUps": {
@@ -72,7 +96,9 @@
     },
     "missingCommercialData": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "currentBlocker": {
       "type": "string"
@@ -88,6 +114,330 @@
       "items": {
         "type": "object"
       }
+    },
+    "lifecyclePhase": {
+      "type": "string",
+      "enum": [
+        "START",
+        "CHANGE",
+        "STOP"
+      ]
+    },
+    "controlStatus": {
+      "type": "string",
+      "enum": [
+        "IN_CONTROL",
+        "WAITING_EXTERNAL",
+        "ACTION_REQUIRED",
+        "BLOCKED",
+        "OUT_OF_CONTROL",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "stopOutcome": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "MONETIZED",
+        "NO_GO",
+        null
+      ]
+    },
+    "stopReason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "startedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "lastEvidenceAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "lastActionAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "nextActionDueAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "stoppedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "invoiceIssuedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "paymentReceivedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "assignedCollaboratorIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "reportRecipientCollaboratorIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "lifecyclePhase"
+        ],
+        "properties": {
+          "lifecyclePhase": {}
+        }
+      },
+      "then": {
+        "required": [
+          "controlStatus",
+          "stopOutcome",
+          "stopReason",
+          "startedAt",
+          "lastEvidenceAt",
+          "lastActionAt",
+          "nextActionDueAt",
+          "updatedAt",
+          "stoppedAt",
+          "invoiceIssuedAt",
+          "paymentReceivedAt",
+          "assignedCollaboratorIds",
+          "reportRecipientCollaboratorIds"
+        ],
+        "properties": {
+          "controlStatus": {},
+          "stopOutcome": {},
+          "stopReason": {},
+          "startedAt": {},
+          "lastEvidenceAt": {},
+          "lastActionAt": {},
+          "nextActionDueAt": {},
+          "updatedAt": {},
+          "stoppedAt": {},
+          "invoiceIssuedAt": {},
+          "paymentReceivedAt": {},
+          "assignedCollaboratorIds": {},
+          "reportRecipientCollaboratorIds": {}
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "lifecyclePhase"
+        ],
+        "properties": {
+          "lifecyclePhase": {
+            "const": "START"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "controlStatus": {
+            "enum": [
+              "IN_CONTROL",
+              "ACTION_REQUIRED",
+              "BLOCKED"
+            ]
+          },
+          "status": {
+            "not": {
+              "enum": [
+                "CLOSED_WON",
+                "CLOSED_LOST"
+              ]
+            }
+          },
+          "stopOutcome": {
+            "const": null
+          },
+          "stopReason": {
+            "const": null
+          },
+          "stoppedAt": {
+            "const": null
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "lifecyclePhase"
+        ],
+        "properties": {
+          "lifecyclePhase": {
+            "const": "CHANGE"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "controlStatus": {
+            "enum": [
+              "IN_CONTROL",
+              "WAITING_EXTERNAL",
+              "ACTION_REQUIRED",
+              "BLOCKED",
+              "OUT_OF_CONTROL"
+            ]
+          },
+          "status": {
+            "not": {
+              "enum": [
+                "CLOSED_WON",
+                "CLOSED_LOST"
+              ]
+            }
+          },
+          "stopOutcome": {
+            "const": null
+          },
+          "stopReason": {
+            "const": null
+          },
+          "stoppedAt": {
+            "const": null
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "lifecyclePhase"
+        ],
+        "properties": {
+          "lifecyclePhase": {
+            "const": "STOP"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "controlStatus": {
+            "const": "NOT_APPLICABLE"
+          },
+          "stopOutcome": {
+            "enum": [
+              "MONETIZED",
+              "NO_GO"
+            ]
+          },
+          "stoppedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "lifecyclePhase",
+          "stopOutcome"
+        ],
+        "properties": {
+          "lifecyclePhase": {
+            "const": "STOP"
+          },
+          "stopOutcome": {
+            "const": "MONETIZED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "const": "CLOSED_WON"
+          },
+          "stopReason": {
+            "const": null
+          },
+          "invoiceIssuedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paymentReceivedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "lifecyclePhase",
+          "stopOutcome"
+        ],
+        "properties": {
+          "lifecyclePhase": {
+            "const": "STOP"
+          },
+          "stopOutcome": {
+            "const": "NO_GO"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "const": "CLOSED_LOST"
+          },
+          "stopReason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
 }
