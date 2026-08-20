@@ -77,6 +77,12 @@ const {
   "./persist-collaborator-registry.js"
 );
 
+const {
+  persistCycleAssignmentPendingQueue,
+} = require(
+  "../mail/persist-cycle-assignment-pending-queue.js"
+);
+
 function walltechOwnAddresses() {
   return mailAccountRegistry.accounts
     .flatMap(
@@ -548,6 +554,9 @@ async function runCollaboratorAutoCycle(
 
     registryPath =
       "runtime/state/collaborators/registry.json",
+
+    cycleAssignmentQueuePath =
+      "runtime/state/cycle-assignment/pending.json",
   },
   dependencies = {},
 ) {
@@ -598,6 +607,12 @@ async function runCollaboratorAutoCycle(
     path.resolve(
       process.cwd(),
       registryPath,
+    );
+
+  const absoluteCycleAssignmentQueuePath =
+    path.resolve(
+      process.cwd(),
+      cycleAssignmentQueuePath,
     );
 
   /*
@@ -719,6 +734,16 @@ async function runCollaboratorAutoCycle(
 
             incomingRegistry:
               candidateRegistry,
+          });
+
+          persistCycleAssignmentPendingQueue({
+            queuePath:
+              absoluteCycleAssignmentQueuePath,
+
+            evidenceRecords,
+
+            ownAddresses:
+              walltechOwnAddresses(),
           });
         };
     }
