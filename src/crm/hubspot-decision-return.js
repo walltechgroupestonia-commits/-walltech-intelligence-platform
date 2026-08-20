@@ -202,11 +202,12 @@ function buildDecisionReturn(
   const decidedBy =
     clean(
       p.walltech_decision_by
-    );
+    )?.toUpperCase() ||
+    null;
 
   invariant(
     decidedBy === "MAX",
-    "DECISION BY MUST BE MAX"
+    "DECISION BY MUST RESOLVE TO MAX"
   );
 
   invariant(
