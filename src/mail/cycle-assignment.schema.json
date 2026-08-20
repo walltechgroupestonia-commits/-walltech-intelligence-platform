@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Walltech Cycle Assignment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "assignmentVersion",
+    "assignmentType",
+    "assignmentId",
+    "evidenceId",
+    "systemProposal",
+    "maxDecision"
+  ],
+  "properties": {
+    "assignmentVersion": {
+      "const": "1.0"
+    },
+    "assignmentType": {
+      "const": "CYCLE_ASSIGNMENT"
+    },
+    "assignmentId": {
+      "type": "string",
+      "pattern": "^CA-[A-Za-z0-9._:-]+$"
+    },
+    "evidenceId": {
+      "type": "string",
+      "pattern": "^ME-[a-f0-9]{64}$"
+    },
+    "systemProposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "proposalOnly",
+        "classificationCandidate",
+        "candidateCycleIds",
+        "canMutateBusinessState"
+      ],
+      "properties": {
+        "proposalOnly": {
+          "const": true
+        },
+        "classificationCandidate": {
+          "type": "string",
+          "enum": [
+            "UNKNOWN",
+            "NEW_CYCLE",
+            "LINK_EXISTING",
+            "NON_DEAL_RELEVANT",
+            "IGNORE"
+          ]
+        },
+        "candidateCycleIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "canMutateBusinessState": {
+          "const": false
+        }
+      }
+    },
+    "maxDecision": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "classification",
+            "cycleId",
+            "assignedCollaboratorIds",
+            "reportRecipientCollaboratorIds",
+            "decisionSource",
+            "decidedBy",
+            "decidedAt"
+          ],
+          "properties": {
+            "state": {
+              "const": "PENDING_MAX"
+            },
+            "classification": {
+              "const": null
+            },
+            "cycleId": {
+              "const": null
+            },
+            "assignedCollaboratorIds": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "reportRecipientCollaboratorIds": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "decisionSource": {
+              "const": null
+            },
+            "decidedBy": {
+              "const": null
+            },
+            "decidedAt": {
+              "const": null
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "classification",
+            "cycleId",
+            "assignedCollaboratorIds",
+            "reportRecipientCollaboratorIds",
+            "decisionSource",
+            "decidedBy",
+            "decidedAt"
+          ],
+          "properties": {
+            "state": {
+              "const": "CONFIRMED"
+            },
+            "classification": {
+              "enum": [
+                "NEW_CYCLE",
+                "LINK_EXISTING",
+                "NON_DEAL_RELEVANT"
+              ]
+            },
+            "cycleId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "assignedCollaboratorIds": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "reportRecipientCollaboratorIds": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "decisionSource": {
+              "const": "MAX_EXPLICIT"
+            },
+            "decidedBy": {
+              "const": "MAX"
+            },
+            "decidedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "classification",
+            "cycleId",
+            "assignedCollaboratorIds",
+            "reportRecipientCollaboratorIds",
+            "decisionSource",
+            "decidedBy",
+            "decidedAt"
+          ],
+          "properties": {
+            "state": {
+              "const": "CONFIRMED"
+            },
+            "classification": {
+              "const": "IGNORE"
+            },
+            "cycleId": {
+              "const": null
+            },
+            "assignedCollaboratorIds": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "reportRecipientCollaboratorIds": {
+              "type": "array",
+              "maxItems": 0
+            },
+            "decisionSource": {
+              "const": "MAX_EXPLICIT"
+            },
+            "decidedBy": {
+              "const": "MAX"
+            },
+            "decidedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
