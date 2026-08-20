@@ -60,6 +60,107 @@ const {
   "../mail/commit-mailbox-processing-cursor.js"
 );
 
+const mailAccountRegistry =
+  require(
+    "../mail/mail-account-registry.json"
+  );
+
+const {
+  buildCollaboratorRegistryCandidates,
+} = require(
+  "./build-collaborator-registry-candidates.js"
+);
+
+const {
+  persistCollaboratorRegistry,
+} = require(
+  "./persist-collaborator-registry.js"
+);
+
+function walltechOwnAddresses() {
+  return mailAccountRegistry.accounts
+    .flatMap(
+      account => [
+        account.mailboxUser,
+        ...(account.routingAddresses || []),
+      ],
+    )
+    .filter(Boolean);
+}
+
+function buildConfirmedRegistryBootstrap(
+  collaboratorDirectory,
+) {
+  if (
+    !Array.isArray(
+      collaboratorDirectory,
+    )
+  ) {
+    throw new Error(
+      "CONFIRMED COLLABORATOR DIRECTORY MUST BE AN ARRAY",
+    );
+  }
+
+  return {
+    registryVersion:
+      "1.0",
+
+    registryType:
+      "WALLTECH_COLLABORATOR_REGISTRY",
+
+    collaborators:
+      collaboratorDirectory.map(
+        collaborator => {
+          const emailAddresses =
+            [
+              ...new Set(
+                (
+                  collaborator.emailAddresses ||
+                  []
+                )
+                  .map(
+                    value =>
+                      String(value)
+                        .trim()
+                        .toLowerCase(),
+                  )
+                  .filter(Boolean),
+              ),
+            ].sort();
+
+          if (
+            emailAddresses.length === 0
+          ) {
+            throw new Error(
+              `CONFIRMED COLLABORATOR WITHOUT EMAIL: ${collaborator.collaboratorId || "UNKNOWN"}`,
+            );
+          }
+
+          return {
+            collaboratorId:
+              collaborator.collaboratorId,
+
+            displayName:
+              collaborator.collaboratorName ??
+              collaborator.displayName ??
+              null,
+
+            emailAddresses,
+
+            registryStatus:
+              "CONFIRMED",
+
+            identitySource:
+              "USER_CONFIRMED_DIRECTORY",
+
+            evidenceRefs:
+              [],
+          };
+        },
+      ),
+  };
+}
+
 function loadJson(
   filePath,
   label,
@@ -444,6 +545,9 @@ async function runCollaboratorAutoCycle(
 
     auditRoot =
       "runtime/audit/collaborator-auto-cycle",
+
+    registryPath =
+      "runtime/state/collaborators/registry.json",
   },
   dependencies = {},
 ) {
@@ -489,6 +593,31 @@ async function runCollaboratorAutoCycle(
     profile,
     cursor,
   );
+
+  const absoluteRegistryPath =
+    path.resolve(
+      process.cwd(),
+      registryPath,
+    );
+
+  /*
+   * COMMIT only.
+   *
+   * The profile directory is already explicit human authority.
+   * It initializes/promotes confirmed identities in the global
+   * registry without adding business attribution.
+   */
+  if (mode === "COMMIT") {
+    persistCollaboratorRegistry({
+      registryPath:
+        absoluteRegistryPath,
+
+      incomingRegistry:
+        buildConfirmedRegistryBootstrap(
+          profile.collaboratorDirectory,
+        ),
+    });
+  }
 
   const cycleId =
     `CAC-${crypto.randomUUID()}`;
@@ -569,10 +698,36 @@ async function runCollaboratorAutoCycle(
     stage =
       "CLASSIFICATION";
 
+    const classificationDependencies =
+      {};
+
+    if (mode === "COMMIT") {
+      classificationDependencies.observeEvidenceRecordsFn =
+        evidenceRecords => {
+          const candidateRegistry =
+            buildCollaboratorRegistryCandidates({
+              mailEvidence:
+                evidenceRecords,
+
+              ownAddresses:
+                walltechOwnAddresses(),
+            });
+
+          persistCollaboratorRegistry({
+            registryPath:
+              absoluteRegistryPath,
+
+            incomingRegistry:
+              candidateRegistry,
+          });
+        };
+    }
+
     const classification =
       await classifyFn(
         discovery,
         profile.collaboratorDirectory,
+        classificationDependencies,
       );
 
     writeCycleArtifact(

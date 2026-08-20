@@ -385,6 +385,17 @@ function acquireAndClassify(
     dependencies.acquireEvidenceRecordsFn ??
     acquireEvidenceRecords;
 
+  /*
+   * Observation boundary for identity discovery.
+   *
+   * Evidence is observed after acquisition and before
+   * confirmed-directory resolution, so unknown terminals are
+   * visible without making them eligible collaborators.
+   */
+  const observeEvidenceRecordsFn =
+    dependencies.observeEvidenceRecordsFn ??
+    null;
+
   if (
     discovery.newUids.length === 0
   ) {
@@ -418,6 +429,23 @@ function acquireAndClassify(
         },
         tempRoot,
       );
+
+    if (observeEvidenceRecordsFn) {
+      /*
+       * Independent copies prevent identity discovery from
+       * mutating the authoritative classification inputs.
+       *
+       * Observer failure is fail-closed when explicitly enabled.
+       */
+      observeEvidenceRecordsFn(
+        structuredClone(
+          evidenceRecords,
+        ),
+        structuredClone(
+          discovery,
+        ),
+      );
+    }
 
     return classifyEvidenceBatch(
       discovery,
