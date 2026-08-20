@@ -39,8 +39,8 @@
       "mailboxUser": "walltechgroup.estonia@gmail.com",
       "provider": "GMAIL_IMAP",
       "providerAccountKey": "GMAIL_ESTONIA",
-      "providerAdapter": "GMAIL_PENDING_V1",
-      "activationStatus": "CONFIGURED_PENDING_PROVIDER_ADAPTER",
+      "providerAdapter": "GMAIL_IMAP_V1",
+      "activationStatus": "ACTIVE",
       "defaultMailboxPaths": [
         "INBOX",
         "[Gmail]/Sent Mail"

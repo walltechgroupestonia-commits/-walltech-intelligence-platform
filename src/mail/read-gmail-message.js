@@ -23,7 +23,7 @@ function positiveUid(value) {
 async function main() {
   const accountKey =
     process.argv[2] ||
-    "INFO";
+    "GMAIL_ESTONIA";
 
   const mailboxPath =
     process.argv[3] ||
@@ -45,9 +45,9 @@ async function main() {
       uid,
       outputPath,
       provider:
-        "ARUBA",
+        "GMAIL",
       envPrefix:
-        null,
+        accountKey,
     });
 
   console.log(
@@ -60,7 +60,7 @@ async function main() {
 
   console.error("");
   console.error(
-    "ARUBA MESSAGE CONTENT ACQUISITION: PASS"
+    "GMAIL MESSAGE CONTENT ACQUISITION: PASS"
   );
 
   console.error(
@@ -100,7 +100,7 @@ main().catch(
   error => {
     console.error("");
     console.error(
-      "ARUBA MESSAGE CONTENT ACQUISITION: FAILED"
+      "GMAIL MESSAGE CONTENT ACQUISITION: FAILED"
     );
 
     console.error(

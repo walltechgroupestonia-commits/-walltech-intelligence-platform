@@ -181,10 +181,18 @@ function main() {
     );
   }
 
-  if (
-    account.providerAdapter !==
-    "ARUBA_EXISTING_V1"
-  ) {
+  const adapterScript =
+    {
+      ARUBA_EXISTING_V1:
+        "src/mail/read-aruba-message.js",
+
+      GMAIL_IMAP_V1:
+        "src/mail/read-gmail-message.js",
+    }[
+      account.providerAdapter
+    ];
+
+  if (!adapterScript) {
     fail(
       `MAIL PROVIDER ADAPTER NOT ACTIVE: ${account.providerAdapter}`,
       6
@@ -231,7 +239,7 @@ function main() {
   try {
     const acquisition =
       runNode([
-        "src/mail/read-aruba-message.js",
+        adapterScript,
         account.providerAccountKey,
         mailboxPath,
         uid,

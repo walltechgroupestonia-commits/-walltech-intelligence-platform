@@ -63,7 +63,8 @@
           "type": "string",
           "enum": [
             "ARUBA_EXISTING_V1",
-            "GMAIL_PENDING_V1"
+            "GMAIL_PENDING_V1",
+            "GMAIL_IMAP_V1"
           ]
         },
         "activationStatus": {
