@@ -3,6 +3,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { URL } = require('node:url');
 
+const {
+  ingestCalendlyWebhook,
+} = require('../leads/ingest-calendly-webhook');
+
 const HOST = process.env.WALLTECH_DEAL_PRODUCT_HOST || '127.0.0.1';
 const PORT = Number(process.env.WALLTECH_DEAL_PRODUCT_PORT || 8787);
 const ROOT = process.cwd();
@@ -1774,6 +1778,234 @@ function recipientReport(emailInput) {
   );
 }
 
+function readRawBody(
+  req,
+  maxBytes = 1_000_000
+) {
+  return new Promise(
+    (resolve, reject) => {
+      const chunks = [];
+      let total = 0;
+      let settled = false;
+
+      function fail(error) {
+        if (settled) return;
+        settled = true;
+        reject(error);
+      }
+
+      req.on(
+        'data',
+        chunk => {
+          if (settled) return;
+
+          const buffer =
+            Buffer.isBuffer(chunk)
+              ? chunk
+              : Buffer.from(chunk);
+
+          total += buffer.length;
+
+          if (total > maxBytes) {
+            fail(
+              new Error(
+                'CALENDLY WEBHOOK BODY TOO LARGE'
+              )
+            );
+
+            req.destroy();
+            return;
+          }
+
+          chunks.push(buffer);
+        }
+      );
+
+      req.on(
+        'end',
+        () => {
+          if (settled) return;
+
+          settled = true;
+
+          resolve(
+            Buffer.concat(chunks)
+          );
+        }
+      );
+
+      req.on(
+        'error',
+        fail
+      );
+    }
+  );
+}
+
+function jsonResponse(
+  res,
+  statusCode,
+  value
+) {
+  res.writeHead(
+    statusCode,
+    {
+      'Content-Type':
+        'application/json; charset=utf-8',
+      'Cache-Control':
+        'no-store',
+      'X-Content-Type-Options':
+        'nosniff',
+    }
+  );
+
+  res.end(
+    JSON.stringify(value)
+  );
+}
+
+async function handleCalendlyLeadPost(
+  req,
+  res
+) {
+  const signingKey =
+    String(
+      process.env
+        .CALENDLY_WEBHOOK_SIGNING_KEY ||
+      ''
+    ).trim();
+
+  const allowedRoutingFormIds =
+    String(
+      process.env
+        .CALENDLY_ALLOWED_ROUTING_FORM_IDS ||
+      ''
+    )
+      .split(',')
+      .map(value => value.trim())
+      .filter(Boolean);
+
+  if (
+    !signingKey ||
+    allowedRoutingFormIds.length === 0
+  ) {
+    jsonResponse(
+      res,
+      503,
+      {
+        ok: false,
+        status:
+          'CALENDLY_INGRESS_NOT_CONFIGURED',
+      }
+    );
+
+    return;
+  }
+
+  let rawBody;
+
+  try {
+    rawBody =
+      await readRawBody(req);
+  } catch (error) {
+    const statusCode =
+      /TOO LARGE/i.test(
+        error.message || ''
+      )
+        ? 413
+        : 400;
+
+    jsonResponse(
+      res,
+      statusCode,
+      {
+        ok: false,
+        status:
+          'REQUEST_BODY_REJECTED',
+      }
+    );
+
+    return;
+  }
+
+  const signatureHeader =
+    req.headers[
+      'calendly-webhook-signature'
+    ];
+
+  const rootDir =
+    String(
+      process.env
+        .WALLTECH_LEAD_EVIDENCE_ROOT ||
+      ''
+    ).trim() ||
+    path.join(
+      ROOT,
+      'runtime/state/lead-evidence'
+    );
+
+  try {
+    const result =
+      ingestCalendlyWebhook({
+        signatureHeader,
+        signingKey,
+        rawBody,
+        rootDir,
+        allowedRoutingFormIds,
+      });
+
+    jsonResponse(
+      res,
+      result.status === 'CREATED'
+        ? 201
+        : 200,
+      {
+        ok: true,
+        status:
+          result.status,
+      }
+    );
+  } catch (error) {
+    const message =
+      String(
+        error.message || ''
+      );
+
+    let statusCode = 422;
+
+    if (
+      /SIGNATURE|REJECTED|TIMESTAMP/i
+        .test(message)
+    ) {
+      statusCode = 401;
+    } else if (
+      /NOT ALLOWED/i.test(message)
+    ) {
+      statusCode = 403;
+    } else if (
+      /INVALID JSON|EVENT NOT SUPPORTED|PAYLOAD MISSING|ROUTING FORM ID MISSING/i
+        .test(message)
+    ) {
+      statusCode = 400;
+    }
+
+    console.error(
+      'CALENDLY LEAD INGRESS:',
+      message
+    );
+
+    jsonResponse(
+      res,
+      statusCode,
+      {
+        ok: false,
+        status:
+          'CALENDLY_WEBHOOK_REJECTED',
+      }
+    );
+  }
+}
+
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     let body = '';
@@ -1799,6 +2031,15 @@ function numberOrNull(value) {
 }
 
 async function handlePost(req, res, pathname) {
+  if (
+    pathname === '/api/lead/calendly'
+  ) {
+    return await handleCalendlyLeadPost(
+      req,
+      res
+    );
+  }
+
   const form = await parseBody(req);
 
   if (
@@ -2140,4 +2381,5 @@ if (require.main === module) {
 
 module.exports = {
   isDealPipelineEligible,
+  server,
 };
