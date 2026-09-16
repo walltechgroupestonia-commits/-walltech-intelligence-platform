@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://walltechgroup.eu/schemas/lead-evidence.schema.json",
+  "title": "Walltech LeadEvidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidenceVersion",
+    "evidenceType",
+    "leadId",
+    "evidenceId",
+    "source",
+    "campaign",
+    "company",
+    "contact",
+    "routingResult",
+    "bookingEvidence",
+    "rawAnswers",
+    "capturedAt"
+  ],
+  "properties": {
+    "evidenceVersion": {
+      "const": "1.0"
+    },
+    "evidenceType": {
+      "const": "LEAD_EVIDENCE"
+    },
+    "leadId": {
+      "type": "string",
+      "pattern": "^LEAD-[a-f0-9]{64}$"
+    },
+    "evidenceId": {
+      "type": "string",
+      "pattern": "^LE-[a-f0-9]{64}$"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceType",
+        "provider",
+        "artifactType",
+        "routingFormId",
+        "submissionId",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "sourceType": {
+          "const": "CALENDLY"
+        },
+        "provider": {
+          "const": "CALENDLY"
+        },
+        "artifactType": {
+          "const": "ROUTING_FORM_SUBMISSION"
+        },
+        "routingFormId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "submissionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "campaign": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "utmSource",
+        "utmMedium",
+        "utmCampaign",
+        "utmContent",
+        "utmTerm",
+        "salesforceUuid"
+      ],
+      "properties": {
+        "utmSource": {
+          "type": ["string", "null"]
+        },
+        "utmMedium": {
+          "type": ["string", "null"]
+        },
+        "utmCampaign": {
+          "type": ["string", "null"]
+        },
+        "utmContent": {
+          "type": ["string", "null"]
+        },
+        "utmTerm": {
+          "type": ["string", "null"]
+        },
+        "salesforceUuid": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "company": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "legalName",
+        "address"
+      ],
+      "properties": {
+        "legalName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "address": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "street",
+            "postalCode",
+            "city",
+            "province"
+          ],
+          "properties": {
+            "street": {
+              "type": ["string", "null"]
+            },
+            "postalCode": {
+              "type": ["string", "null"]
+            },
+            "city": {
+              "type": ["string", "null"]
+            },
+            "province": {
+              "type": ["string", "null"]
+            }
+          }
+        }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fullName",
+        "role",
+        "email",
+        "phone"
+      ],
+      "properties": {
+        "fullName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": ["string", "null"]
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "phone": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "routingResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "targetRef"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "EVENT_TYPE",
+            "EXTERNAL_URL",
+            "CUSTOM_MESSAGE",
+            "UNKNOWN"
+          ]
+        },
+        "targetRef": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "bookingEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "linked",
+        "submitterType",
+        "scheduledEventId",
+        "inviteeId"
+      ],
+      "properties": {
+        "linked": {
+          "type": "boolean"
+        },
+        "submitterType": {
+          "type": ["string", "null"]
+        },
+        "scheduledEventId": {
+          "anyOf": [
+            { "$ref": "#/$defs/uuid" },
+            { "type": "null" }
+          ]
+        },
+        "inviteeId": {
+          "anyOf": [
+            { "$ref": "#/$defs/uuid" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "linked": {
+                "const": true
+              }
+            },
+            "required": ["linked"]
+          },
+          "then": {
+            "properties": {
+              "scheduledEventId": {
+                "$ref": "#/$defs/uuid"
+              },
+              "inviteeId": {
+                "$ref": "#/$defs/uuid"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "rawAnswers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "questionUuid",
+          "question",
+          "answer"
+        ],
+        "properties": {
+          "questionUuid": {
+            "$ref": "#/$defs/uuid"
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answer": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "capturedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    }
+  }
+}
